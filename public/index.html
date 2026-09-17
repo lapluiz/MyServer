@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LocalHost Dash</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                        }
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col font-sans relative overflow-x-hidden">
+
+    <!-- Header Topo Simples -->
+    <header class="h-16 bg-white/80 backdrop-blur-lg border-b border-slate-200 flex items-center justify-between px-6 sticky top-0 z-30 shadow-sm w-full">
+        <div class="flex items-center gap-3 text-brand-600">
+            <div class="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center">
+                <i class="fa-solid fa-server text-brand-600"></i>
+            </div>
+            <h1 class="text-xl font-bold text-slate-800 tracking-tight">LocalHost<span class="text-brand-500">Dash</span></h1>
+            
+            <!-- Badge Status -->
+            <div class="hidden sm:flex items-center gap-1.5 ml-4 px-2.5 py-1 bg-emerald-50 border border-emerald-200 rounded-full">
+                <span class="relative flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
+                <span class="text-xs font-semibold text-emerald-700">Túnel Ativo</span>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-4">
+            <button class="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200 hover:text-brand-600 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-1" onclick="location.reload()" title="Atualizar Dados">
+                <i class="fa-solid fa-rotate-right"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-1 w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 space-y-6 pb-20">
+        
+        <!-- Section: Resumo de Conexão (IPs e Uptime) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <!-- Card: Uptime da Sessão -->
+            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-soft card-hover flex flex-col justify-between">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <p class="text-sm font-semibold text-slate-500 uppercase tracking-wider">Sessão Atual</p>
+                        <h3 class="text-3xl font-bold text-slate-800 mt-2 tracking-tight" id="uptime-display">00:00:00</h3>
+                    </div>
+                    <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-500 flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-stopwatch"></i>
+                    </div>
+                </div>
+                <div class="pt-4 border-t border-slate-100 mt-auto">
+                    <p class="text-xs text-slate-500 flex items-center gap-1.5">
+                        <i class="fa-solid fa-play text-emerald-500 text-[10px]"></i> 
+                        Iniciado em: <span id="start-time" class="font-medium text-slate-700">---</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Card: IPv4 -->
+            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-soft card-hover flex flex-col justify-between relative overflow-hidden group">
+                <div class="absolute -right-6 -top-6 w-32 h-32 bg-purple-50 rounded-full opacity-50 z-0 group-hover:scale-110 transition-transform duration-500"></div>
+                
+                <div class="flex justify-between items-start mb-2 relative z-10">
+                    <div>
+                        <p class="text-sm font-semibold text-slate-500 uppercase tracking-wider">IPv4 Público</p>
+                        <h3 class="text-xl font-bold text-slate-800 mt-2 font-mono tracking-tight" id="ipv4-display">Buscando...</h3>
+                    </div>
+                    <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-xl shadow-sm border border-purple-100">
+                        <i class="fa-solid fa-network-wired"></i>
+                    </div>
+                </div>
+                
+                <div class="relative z-10 mt-auto pt-4">
+                    <button class="inline-flex items-center gap-1.5 text-sm font-medium text-purple-600 hover:text-purple-800 bg-purple-50 hover:bg-purple-100 px-3 py-1.5 rounded-lg transition-colors" onclick="copyToClipboard('ipv4-display', this)">
+                        <i class="fa-regular fa-copy"></i> Copiar IP
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card: IPv6 -->
+            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-soft card-hover flex flex-col justify-between relative overflow-hidden group">
+                <div class="absolute -right-6 -top-6 w-32 h-32 bg-indigo-50 rounded-full opacity-50 z-0 group-hover:scale-110 transition-transform duration-500"></div>
+                
+                <div class="flex justify-between items-start mb-2 relative z-10">
+                    <div class="w-full">
+                        <p class="text-sm font-semibold text-slate-500 uppercase tracking-wider">IPv6 Público</p>
+                        <h3 class="text-[13px] font-bold text-slate-800 mt-2 font-mono leading-tight break-all" id="ipv6-display">Buscando...</h3>
+                    </div>
+                    <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl shadow-sm border border-indigo-100 flex-shrink-0 ml-3">
+                        <i class="fa-solid fa-globe"></i>
+                    </div>
+                </div>
+                
+                <div class="relative z-10 mt-auto pt-4">
+                    <button class="inline-flex items-center gap-1.5 text-sm font-medium text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition-colors" onclick="copyToClipboard('ipv6-display', this)">
+                        <i class="fa-regular fa-copy"></i> Copiar IPv6
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <!-- Card: Informações Geográficas -->
+            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-soft card-hover">
+                <div class="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
+                    <div class="w-10 h-10 rounded-lg bg-rose-50 text-rose-500 flex items-center justify-center">
+                        <i class="fa-solid fa-location-dot"></i>
+                    </div>
+                    <h2 class="text-lg font-bold text-slate-800">Localização do Acesso</h2>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-6">
+                    <!-- Pin Visual -->
+                    <div class="bg-slate-50 rounded-xl border border-slate-200 flex-1 flex flex-col items-center justify-center p-6 text-center min-h-[160px] relative overflow-hidden">
+                        <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(#000 1px, transparent 1px); background-size: 16px 16px;"></div>
+                        <div class="w-14 h-14 bg-white rounded-full shadow-md flex items-center justify-center mb-3 border border-slate-100 relative z-10">
+                            <i class="fa-solid fa-map-pin text-2xl text-rose-500"></i>
+                        </div>
+                        <h4 class="font-bold text-slate-800 text-lg relative z-10" id="geo-city">Verificando...</h4>
+                        <p class="text-sm text-slate-500 font-medium relative z-10 mt-1" id="geo-country">Aguarde</p>
+                    </div>
+
+                    <!-- Lista de Dados -->
+                    <div class="flex-1 space-y-4 justify-center flex flex-col">
+                        <div>
+                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Provedor de Internet (ISP)</p>
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-building text-slate-400"></i>
+                                <span class="text-sm font-semibold text-slate-800" id="geo-isp">Carregando...</span>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Estado / Região</p>
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-map text-slate-400"></i>
+                                <span class="text-sm font-semibold text-slate-800" id="geo-region">Carregando...</span>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Coordenadas (Aprox)</p>
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-compass text-slate-400"></i>
+                                <span class="text-sm font-mono font-semibold text-slate-800" id="geo-ll">Carregando...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card: Dispositivo Cliente -->
+            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-soft card-hover flex flex-col">
+                <div class="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
+                    <div class="w-10 h-10 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center">
+                        <i class="fa-solid fa-laptop-code"></i>
+                    </div>
+                    <h2 class="text-lg font-bold text-slate-800">Seu Dispositivo</h2>
+                </div>
+                
+                <div class="space-y-4 flex-1">
+                    <!-- OS -->
+                    <div class="flex items-center gap-4 p-3.5 bg-slate-50 rounded-xl border border-slate-100">
+                        <div class="w-12 h-12 rounded-full bg-white shadow-sm border border-slate-200 flex items-center justify-center">
+                            <i class="fa-solid fa-laptop text-slate-700 text-xl" id="os-icon"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Sistema Operacional</p>
+                            <p class="text-base font-bold text-slate-800 mt-0.5" id="client-os">Detectando...</p>
+                        </div>
+                    </div>
+
+                    <!-- Browser -->
+                    <div class="flex items-center gap-4 p-3.5 bg-slate-50 rounded-xl border border-slate-100">
+                        <div class="w-12 h-12 rounded-full bg-white shadow-sm border border-slate-200 flex items-center justify-center">
+                            <i class="fa-solid fa-globe text-slate-700 text-xl" id="browser-icon"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Navegador Principal</p>
+                            <p class="text-base font-bold text-slate-800 mt-0.5" id="client-browser">Detectando...</p>
+                        </div>
+                    </div>
+
+                    <!-- Tela -->
+                    <div class="flex items-center gap-4 p-3.5 bg-slate-50 rounded-xl border border-slate-100">
+                        <div class="w-12 h-12 rounded-full bg-white shadow-sm border border-slate-200 flex items-center justify-center">
+                            <i class="fa-solid fa-display text-slate-700 text-lg"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Resolução de Tela</p>
+                            <p class="text-base font-bold text-slate-800 mt-0.5" id="client-screen">---</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Card: Request / Connection Headers -->
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-soft card-hover">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center">
+                    <i class="fa-solid fa-file-code"></i>
+                </div>
+                <h2 class="text-lg font-bold text-slate-800">Detalhes Técnicos do Navegador</h2>
+            </div>
+            
+            <div class="bg-[#1e293b] rounded-xl p-5 overflow-x-auto shadow-inner border border-slate-800">
+                <pre class="text-emerald-400 font-mono text-sm whitespace-pre-wrap break-all leading-relaxed" id="connection-details">Analisando dados do cliente...</pre>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Notificação de cópia (Toast) -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 text-white px-5 py-4 rounded-xl shadow-2xl transform translate-y-24 opacity-0 transition-all duration-300 z-50 flex items-center gap-3 border border-slate-700">
+        <i class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
+        <span class="text-sm font-medium" id="toast-msg">Copiado para a área de transferência!</span>
+    </div>
+
+    <script>
+        // --- 1. Lógica de Tempo de Sessão (Real) ---
+        const sessionStartTime = new Date();
+        
+        // Renomeada a variável para evitar conflitos (SyntaxError fix)
+        const dateFormatOptions = { 
+            day: '2-digit', month: '2-digit', year: 'numeric', 
+            hour: '2-digit', minute: '2-digit', second: '2-digit' 
+        };
+        document.getElementById('start-time').textContent = sessionStartTime.toLocaleDateString('pt-BR', dateFormatOptions);
+
+        function updateUptime() {
+            const now = new Date();
+            const diff = now - sessionStartTime;
+
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24).toString().padStart(2, '0');
+            const minutes = Math.floor((diff / 1000 / 60) % 60).toString().padStart(2, '0');
+            const seconds = Math.floor((diff / 1000) % 60).toString().padStart(2, '0');
+
+            document.getElementById('uptime-display').textContent = `${hours}h ${minutes}m ${seconds}s`;
+        }
+        setInterval(updateUptime, 1000);
+        updateUptime();
+
+        // --- 2. Buscar Dados Reais de IP e Localização ---
+        async function fetchRealIpData() {
+            try {
+                // Fetch IPv4
+                try {
+                    const v4Resp = await fetch('https://api.ipify.org?format=json');
+                    const v4Data = await v4Resp.json();
+                    document.getElementById('ipv4-display').textContent = v4Data.ip;
+                } catch (e) {
+                    document.getElementById('ipv4-display').textContent = "Falha ao obter IPv4";
+                    document.getElementById('ipv4-display').classList.add('text-red-500');
+                }
+
+                // Fetch IPv6
+                try {
+                    const v6Resp = await fetch('https://api64.ipify.org?format=json');
+                    const v6Data = await v6Resp.json();
+                    if (v6Data.ip.includes(':')) {
+                        document.getElementById('ipv6-display').textContent = v6Data.ip;
+                    } else {
+                        document.getElementById('ipv6-display').textContent = "Rede sem suporte a IPv6";
+                        document.getElementById('ipv6-display').classList.add('text-slate-500', 'font-normal');
+                    }
+                } catch (e) {
+                    document.getElementById('ipv6-display').textContent = "Falha na verificação";
+                }
+
+                // Fetch Geolocation baseada no IP de acesso
+                const geoResp = await fetch('https://ipapi.co/json/');
+                const geoData = await geoResp.json();
+
+                if (geoData.error) throw new Error(geoData.reason);
+
+                document.getElementById('geo-city').textContent = `${geoData.city || 'N/A'}, ${geoData.region_code || 'N/A'}`;
+                document.getElementById('geo-country').textContent = geoData.country_name || 'Desconhecido';
+                document.getElementById('geo-isp').textContent = geoData.org || geoData.asn || 'Desconhecido';
+                document.getElementById('geo-region').textContent = geoData.region || 'Desconhecido';
+                document.getElementById('geo-ll').textContent = `${geoData.latitude || '0'}, ${geoData.longitude || '0'}`;
+
+            } catch (error) {
+                console.error("Erro geral ao buscar dados da rede:", error);
+                document.getElementById('geo-city').textContent = "Indisponível";
+                document.getElementById('geo-country').textContent = "Bloqueado por AdBlock/Rede";
+                document.getElementById('geo-isp').textContent = "N/A";
+                document.getElementById('geo-region').textContent = "N/A";
+                document.getElementById('geo-ll').textContent = "N/A";
+            }
+        }
+        fetchRealIpData();
+
+        // --- 3. Informações Reais do Dispositivo Cliente ---
+        function getClientInfo() {
+            // Screen Resolution
+            document.getElementById('client-screen').textContent = `${window.screen.width}x${window.screen.height} (Janela: ${window.innerWidth}x${window.innerHeight})`;
+
+            const userAgent = navigator.userAgent;
+            let os = "OS Desconhecido";
+            let browser = "Navegador Desconhecido";
+            let osIcon = "fa-laptop";
+            let browserIcon = "fa-globe";
+
+            // OS Detection
+            if (userAgent.indexOf("Win") != -1) { os = "Windows"; osIcon = "fa-windows"; }
+            else if (userAgent.indexOf("Mac") != -1) { os = "MacOS / iOS"; osIcon = "fa-apple"; }
+            else if (userAgent.indexOf("Linux") != -1) { os = "Linux"; osIcon = "fa-linux"; }
+            else if (userAgent.indexOf("Android") != -1) { os = "Android"; osIcon = "fa-android"; }
+            
+            if (navigator.userAgentData && navigator.userAgentData.platform) {
+                os += ` (${navigator.userAgentData.platform})`;
+            }
+
+            // Browser Detection
+            if (userAgent.indexOf("Firefox") != -1) { browser = "Mozilla Firefox"; browserIcon = "fa-firefox-browser"; }
+            else if (userAgent.indexOf("Edg") != -1) { browser = "Microsoft Edge"; browserIcon = "fa-edge"; }
+            else if (userAgent.indexOf("OPR") != -1 || userAgent.indexOf("Opera") != -1) { browser = "Opera"; browserIcon = "fa-opera"; }
+            else if (userAgent.indexOf("Chrome") != -1) { browser = "Google Chrome"; browserIcon = "fa-chrome"; }
+            else if (userAgent.indexOf("Safari") != -1) { browser = "Apple Safari"; browserIcon = "fa-safari"; }
+
+            document.getElementById('client-os').textContent = os;
+            document.getElementById('client-browser').textContent = browser;
+            
+            // Set Icons
+            const elOs = document.getElementById('os-icon');
+            elOs.className = `fa-brands ${osIcon} text-slate-700 text-xl`;
+            if(osIcon === 'fa-laptop') elOs.className = `fa-solid ${osIcon} text-slate-700 text-xl`;
+
+            const elBrowser = document.getElementById('browser-icon');
+            elBrowser.className = `fa-brands ${browserIcon} text-slate-700 text-xl`;
+            if(browserIcon === 'fa-globe') elBrowser.className = `fa-solid ${browserIcon} text-slate-700 text-xl`;
+            
+            // Connection Details JSON
+            const details = {
+                userAgent: navigator.userAgent,
+                language: navigator.language,
+                cookieEnabled: navigator.cookieEnabled,
+                doNotTrack: navigator.doNotTrack || 'Não definido',
+                hardwareConcurrency: navigator.hardwareConcurrency || 'N/A',
+                deviceMemory: navigator.deviceMemory ? navigator.deviceMemory + 'GB (Aprox)' : 'N/A',
+                connection: navigator.connection ? {
+                    effectiveType: navigator.connection.effectiveType,
+                    downlink: navigator.connection.downlink + ' Mbps',
+                    rtt: navigator.connection.rtt + ' ms'
+                } : 'API Navigator Connection não suportada neste browser'
+            };
+            
+            document.getElementById('connection-details').textContent = JSON.stringify(details, null, 2);
+        }
+        getClientInfo();
+
+        // --- 4. Utilitários (Copiar e Toast) ---
+        function copyToClipboard(elementId, btnElement) {
+            const textToCopy = document.getElementById(elementId).textContent;
+            
+            if(textToCopy.includes("Buscando") || textToCopy.includes("suporte") || textToCopy.includes("Falha")) return;
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                showToast("Copiado com sucesso!");
+                const originalHtml = btnElement.innerHTML;
+                btnElement.innerHTML = '<i class="fa-solid fa-check"></i> Copiado';
+                btnElement.classList.add('bg-emerald-100', 'text-emerald-700');
+                
+                setTimeout(() => {
+                    btnElement.innerHTML = originalHtml;
+                    btnElement.classList.remove('bg-emerald-100', 'text-emerald-700');
+                }, 2000);
+            }).catch(err => {
+                console.error('Falha ao copiar: ', err);
+            });
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').textContent = message;
+            
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

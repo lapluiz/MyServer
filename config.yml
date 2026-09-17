@@ -1,0 +1,6 @@
+tunnel: myserver
+credentials-file: /home/inventtor_user/.cloudflared/6890b8e0-09eb-441b-b04d-0a2d873e3a14.json # Verifique se este arquivo existe no seu home
+ingress:
+  - hostname: mrinventtor.com.br
+    service: http://localhost:3000
+  - service: http_status:404
