@@ -1,0 +1,8 @@
+wsl
+cloudflared tunnel run --url http://localhost:3000 myserver
+pm2 start index.js --name inventtorServer     
+
+pm2 start cloudflared --name "cloudflare-tunnel" -- tunnel run --url http://localhost:3000 myserver
+$ pm2 start index.js --name "myserver"
+$ pm2 save
+$ pm2 status
