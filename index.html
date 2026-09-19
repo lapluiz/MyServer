@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-colormode="modeauto" data-colorpalette="oklch">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Descrição da sua aplicação web para os motores de busca.">
+    <meta name="keywords" content="webapp, node, spa, javascript">
+    <meta name="author" content="Seu Nome">
+    
+    <!-- Open Graph (Redes Sociais) -->
+    <meta property="og:title" content="My Web App">
+    <meta property="og:description" content="Descrição detalhada para quando o link for compartilhado.">
+    <meta property="og:type" content="website">
+    
+    <title>My Web App - Principal</title>
+    
+    <!-- Estilos -->
+    <link rel="stylesheet" href="/src/assets/css/main.css">
+    
+    <!-- Import Maps para dependências JS (ES Modules) -->
+    <script type="importmap">
+    {
+        "imports": {
+            "axios": "https://esm.sh/axios@1.6.7",
+            "@google/generative-ai": "https://esm.run/@google/generative-ai"
+        }
+    }
+    </script>
+</head>
+<body>
+    <!-- Cabeçalho Principal -->
+    <header class="header">
+        <div class="container">
+            <a href="/" class="brand-logo" aria-label="Ir para a página inicial">My App</a>
+            
+            <!-- Navegação Semântica -->
+            <nav class="navbar" aria-label="Navegação principal">
+                <ul>
+                    <li><a href="/" aria-current="page">Início</a></li>
+                    <li><a href="/sobre">Sobre</a></li>
+                    <li><a href="/servicos">Serviços</a></li>
+                    <li><a href="/contato">Contato</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main id="main-content">
+        <!-- Seção de Destaque / Hero -->
+        <section class="hero-section" aria-labelledby="hero-title">
+            <div class="container">
+                <h1 id="hero-title">Bem-vindo ao My App</h1>
+                <p>Uma aplicação construída com as melhores práticas de HTML semântico e SEO.</p>
+                <button type="button" class="cta-button">Começar Agora</button>
+            </div>
+        </section>
+
+        <!-- Seção de Conteúdo Auxiliar (Features/Artigos) -->
+        <section class="features-section" aria-labelledby="features-title">
+            <div class="container">
+                <h2 id="features-title">Nossos Recursos</h2>
+                <div class="grid-layout">
+                    <article class="feature-card">
+                        <h3>Performance</h3>
+                        <p>Carregamento rápido e otimizado.</p>
+                    </article>
+                    <article class="feature-card">
+                        <h3>Acessibilidade</h3>
+                        <p>Desenvolvido para todos os usuários.</p>
+                    </article>
+                    <article class="feature-card">
+                        <h3>Responsividade</h3>
+                        <p>Funciona perfeitamente em qualquer dispositivo.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Conteúdo lateral (Opcional, usado para banners, links extras, etc) -->
+        <aside class="sidebar">
+            <div class="container">
+                <h3>Informações Adicionais</h3>
+                <p>Aqui você pode colocar widgets ou links importantes.</p>
+            </div>
+        </aside>
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2026 My App. Todos os direitos reservados.</p>
+                <nav aria-label="Navegação do rodapé">
+                    <ul>
+                        <li><a href="/privacidade">Política de Privacidade</a></li>
+                        <li><a href="/termos">Termos de Uso</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="module" src="/src/js/FNTND-script-whats.js"></script>
+</body>
+</html>

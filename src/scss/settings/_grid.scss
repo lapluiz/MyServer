@@ -1,0 +1,181 @@
+// 1. MAPA DE BREAKPOINTS (Padrão de Mercado)
+$breakpoints: (
+    'ex': 1480px,
+    'xl': 1280px,
+    'lg': 1024px,
+    'md': 768px,
+    'sm': 576px,
+    'xs': 375px) !default;
+
+// 2. CONFIGURAÇÃO DE CONTAINER E GRID
+.gcontainer {
+    container-type: inline-size;
+    container-name: dynamic-box;
+    width: 100%;
+}
+
+.ggrid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr)
+    );
+gap: var(--_grid-gap, 16px);
+width: 100%;
+}
+
+@function grid-span($cols) {
+    @return span #{$cols} / span #{$cols};
+}
+
+// 3. GERAÇÃO AUTOMATIZADA DOS ATRIBUTOS E RESPONSIVIDADE
+.ggrid>* {
+    // Estados Base (Fallback inicial)
+    grid-column: var(--_col-span, span 12 / span 12);
+    display: var(--_display, flex);
+    flex-direction: var(--_fd, column);
+    flex-wrap: var(--_fw, nowrap);
+    align-items: var(--_ai, stretch);
+    justify-content: var(--_jc, flex-start);
+    order: var(--_ord, 0);
+
+    $sizes: (
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+    );
+
+// Mapeamento Base de Atributos
+@each $i in $sizes {
+    &[c="#{$i}"] {
+        --_col-span: #{grid-span($i)};
+    }
+}
+
+&[n],
+&[n="true"] {
+    --_display: none;
+}
+
+@each $dir in (row, column, row-reverse, column-reverse) {
+    &[fd="#{$dir}"] {
+        --_fd: #{$dir};
+    }
+}
+
+@each $wrap in (wrap, nowrap, wrap-reverse) {
+    &[fw="#{$wrap}"] {
+        --_fw: #{$wrap};
+    }
+}
+
+@each $val in (start, end, center, stretch, baseline, between, around) {
+    $mapped-ai: $val;
+    @if $val == start { $mapped-ai: flex-start; }
+    @else if $val == end { $mapped-ai: flex-end; }
+
+    &[ai="#{$val}"] {
+        --_ai: #{$mapped-ai};
+    }
+
+    $mapped-jc: $val;
+    @if $val == between { $mapped-jc: space-between; }
+    @else if $val == around { $mapped-jc: space-around; }
+    @else if $val == start { $mapped-jc: flex-start; }
+    @else if $val == end { $mapped-jc: flex-end; }
+
+    &[jc="#{$val}"] {
+        --_jc: #{$mapped-jc};
+    }
+}
+
+// -----------------------------------------------------------------
+// LOOP DINÂMICO PARA BREAKPOINTS ($breakpoints)
+// -----------------------------------------------------------------
+@each $name, $value in $breakpoints {
+
+    // Atributos diretos por breakpoint (ex: clg="10", nmd, etc)
+    @each $i in $sizes {
+        &[c#{$name}="#{$i}"] {
+            --_col-span: #{grid-span($i)};
+        }
+    }
+
+    &[n#{$name}] {
+        --_display: none;
+    }
+
+    @each $dir in (row, column, row-reverse, column-reverse) {
+        &[fd#{$name}="#{$dir}"] {
+            --_fd: #{$dir};
+        }
+    }
+
+    @each $wrap in (wrap, nowrap, wrap-reverse) {
+        &[fw#{$name}="#{$wrap}"] {
+            --_fw: #{$wrap};
+        }
+    }
+
+    // A) Regras via @MEDIA (Janela do Navegador)
+    @media (max-width: $value) {
+        @each $i in $sizes {
+            &[c#{$name}="#{$i}"] {
+                --_col-span: #{grid-span($i)};
+            }
+        }
+
+        &[n#{$name}] {
+            --_display: none;
+        }
+
+        @each $dir in (row, column, row-reverse, column-reverse) {
+            &[fd#{$name}="#{$dir}"] {
+                --_fd: #{$dir};
+            }
+        }
+
+        @each $wrap in (wrap, nowrap, wrap-reverse) {
+            &[fw#{$name}="#{$wrap}"] {
+                --_fw: #{$wrap};
+            }
+        }
+    }
+
+    // B) Regras via @CONTAINER (.gcontainer)
+    @container dynamic-box (max-width: $value) {
+        @each $i in $sizes {
+            &[c#{$name}="#{$i}"] {
+                --_col-span: #{grid-span($i)};
+            }
+        }
+
+        &[n#{$name}] {
+            --_display: none;
+        }
+
+        @each $dir in (row, column, row-reverse, column-reverse) {
+            &[fd#{$name}="#{$dir}"] {
+                --_fd: #{$dir};
+            }
+        }
+
+        @each $wrap in (wrap, nowrap, wrap-reverse) {
+            &[fw#{$name}="#{$wrap}"] {
+                --_fw: #{$wrap};
+            }
+        }
+    }
+}
+
+// Fim do @each $breakpoints
+}
+
+// Fim do seletor .ggrid > *

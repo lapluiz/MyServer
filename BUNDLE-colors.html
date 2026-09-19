@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en" data-colorpalette="oklch" data-colormode="modeauto">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BUNDLE Colors - System Visualizer</title>
+
+    <!-- LINK TO MAIN CSS (Utilization of Project Variables) -->
+    <link rel="stylesheet" href="/src/assets/css/main.css">
+
+    <style>
+        /* 
+         * LAYOUT STYLES ONLY 
+         * (Logic is now handled by main.css)
+         */
+
+        :root {
+            --font-main: system-ui, -apple-system, sans-serif;
+            --radius-doc: 12px;
+            --border-soft: rgba(0, 0, 0, 0.1);
+        }
+
+        /* Dark Mode Layout Adjustments */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --border-soft: rgba(255, 255, 255, 0.1);
+            }
+        }
+
+        [data-colormode="modedrk"] {
+            --border-soft: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: var(--font-main);
+            background: var(--bg-app);
+            color: var(--txt-primary);
+            transition: background 0.3s, color 0.3s;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            margin-top: 40px;
+            border-bottom: 2px solid var(--border-soft);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 20px;
+            background: rgba(128, 128, 128, 0.1);
+            padding: 20px;
+            border-radius: var(--radius-doc);
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .control-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        select {
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-weight: bold;
+        }
+
+        input[type="range"] {
+            width: 150px;
+        }
+
+
+        /* SCALES */
+        .scale-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .scale-swatch {
+            flex: 1;
+            min-width: 80px;
+            height: 80px;
+            border-radius: var(--radius-doc);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            border: 1px solid var(--border-soft);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+            position: relative;
+        }
+
+        .scale-swatch span {
+            font-size: 9px;
+            opacity: 0.6;
+            margin-top: 4px;
+        }
+
+
+        /* STATIC GRIDS */
+        .grid-static {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 15px;
+        }
+
+        .static-card {
+            background: rgba(128, 128, 128, 0.05);
+            border-radius: var(--radius-doc);
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 10px;
+        }
+
+        .circle-swatch {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border: 2px solid white;
+        }
+
+        .static-card code {
+            font-size: 11px;
+            opacity: 0.7;
+            display: block;
+            margin-top: 5px;
+        }
+
+        .static-card strong {
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header-controls">
+        <div class="control-item">
+            <label>System Mode</label>
+            <svg width="24" height="24" style="--clr-icon: #ff6600;">
+                <use href="http://localhost:3000/src/assets/icons/icons-sprite2.svg#icon-test-lvl1"></use>
+            </svg>
+            <select id="selMode" onchange="updateView()">
+                <option value="modeauto">Auto</option>
+                <option value="modelgt">Light</option>
+                <option value="modedrk">Dark</option>
+            </select>
+        </div>
+        <div class="control-item">
+            <label>Color Palette</label>
+            <select id="selPalette" onchange="updateView()">
+                <option value="oklch">OKLCH (Reactive)</option>
+                <option value="colormix">Color Mix</option>
+            </select>
+        </div>
+        <div class="control-item">
+            <label>Global Chroma</label>
+            <input type="range" min="0" max="2" step="0.1" value="1" oninput="updateChroma(this.value)">
+        </div>
+    </div>
+
+    <h1>System Colors Bundle</h1>
+    <p>Visualization of variables from <code>main.css</code>.</p>
+
+    <!-- SCALABLE COLORS -->
+    <h2>Scalable Colors (From CSS)</h2>
+    <div id="scalesContainer"></div>
+
+    <!-- NEUTRAL -->
+    <h2>Neutral Tones</h2>
+    <div class="scale-row">
+        <div class="scale-swatch" style="background: var(--neutral-gray); color:white">Base</div>
+        <div class="scale-swatch" style="background: var(--bg-app); color:var(--txt-primary); border: 2px dashed red;">
+            Bg App</div>
+    </div>
+
+    <!-- STATIC GROUPS -->
+    <h2>Time of Day</h2>
+    <div class="grid-static" id="groupDay"></div>
+
+    <h2>Thermal</h2>
+    <div class="grid-static" id="groupTermic"></div>
+
+    <h2>File Types</h2>
+    <div class="grid-static" id="groupFiles"></div>
+
+    <h2>Weather</h2>
+    <div class="grid-static" id="groupWeather"></div>
+
+    <script>
+        const root = document.documentElement;
+
+        // SCALES CONFIG
+        const scales = [
+            { name: 'clr-01', label: 'Primary (01)' },
+            { name: 'clr-02', label: 'Secondary (02)' },
+            { name: 'clr-slct', label: 'Selection' },
+            { name: 'semantic-success', label: 'Success' },
+            { name: 'semantic-danger', label: 'Danger' },
+            { name: 'semantic-info', label: 'Info' },
+            { name: 'semantic-warning', label: 'Warning' }
+        ];
+
+        const steps = ['bg', 'ulgt', 'slgt', 'lgt', 'base', 'drk', 'sdrk', 'udrk'];
+
+        // GENERATE SCALES
+        const container = document.getElementById('scalesContainer');
+        scales.forEach(scale => {
+            const rowHTML = `
+                <div style="margin-top: 15px; font-weight: bold; opacity: 0.7;">${scale.label} <code>--${scale.name}</code></div>
+                <div class="scale-row">
+                    ${steps.map((step, index) => {
+                // Simple contrast heuristic: first 3 are light backgrounds (dark text), rest are dark (light text)
+                const textColor = index < 3 ? '#000' : '#fff';
+                return `
+                        <div class="scale-swatch" style="background: var(--${scale.name}-${step}); color: ${textColor}">
+                            ${step}
+                        </div>
+                        `;
+            }).join('')}
+                </div>
+            `;
+            container.innerHTML += rowHTML;
+        });
+
+
+        // STATIC COLORS CONFIG
+        const staticGroups = {
+            groupDay: [
+                { var: '--clr-day', label: 'Day' },
+                { var: '--clr-day-grad', label: 'Day Grad' },
+                { var: '--clr-after', label: 'After' },
+                { var: '--clr-after-grad', label: 'After Grad' },
+                { var: '--clr-night', label: 'Night' },
+                { var: '--clr-night-grad', label: 'Night Grad' }
+            ],
+            groupTermic: [
+                { var: '--clr-termic1', label: 'Termic 1' },
+                { var: '--clr-termic2', label: 'Termic 2' },
+                { var: '--clr-termic3', label: 'Termic 3' },
+                { var: '--clr-termic4', label: 'Termic 4' },
+                { var: '--clr-termic5', label: 'Termic 5' }
+            ],
+            groupFiles: [
+                { var: '--clrfile-pdf', label: 'PDF' },
+                { var: '--clrfile-ai', label: 'AI' },
+                { var: '--clrfile-psd', label: 'PSD' },
+                { var: '--clrfile-doc', label: 'DOC' },
+                { var: '--clrfile-xls', label: 'XLS' },
+                { var: '--clrfile-ppt', label: 'PPT' },
+                { var: '--clrfile-zip', label: 'ZIP' },
+                { var: '--clrfile-html', label: 'HTML' }
+            ],
+            groupWeather: [
+                { var: '--sun', label: 'Sun' },
+                { var: '--sunrise', label: 'Sunrise' },
+                { var: '--sunset', label: 'Sunset' },
+                { var: '--moon', label: 'Moon' },
+                { var: '--rain', label: 'Rain' },
+                { var: '--wind', label: 'Wind' },
+                { var: '--cloud4', label: 'Cloud' }
+            ]
+        };
+
+        // GENERATE STATIC GRIDS
+        for (const [groupId, items] of Object.entries(staticGroups)) {
+            const groupContainer = document.getElementById(groupId);
+            items.forEach(item => {
+                groupContainer.innerHTML += `
+                    <div class="static-card">
+                        <div class="circle-swatch" style="background: var(${item.var})"></div>
+                        <div><strong>${item.label}</strong><code>${item.var}</code></div>
+                    </div>
+                `;
+            });
+        }
+
+        // CONTROLS
+        function updateView() {
+            root.setAttribute('data-colormode', document.getElementById('selMode').value);
+            root.setAttribute('data-colorpalette', document.getElementById('selPalette').value);
+        }
+
+        function updateChroma(val) {
+            root.style.setProperty('--chroma-factor', val);
+        }
+    </script>
+</body>
+
+</html>

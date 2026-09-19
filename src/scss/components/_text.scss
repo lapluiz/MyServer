@@ -1,0 +1,321 @@
+p {
+    // 1. TRANSITION & EFFECTS
+    transition: var(--p-trs, all var(--transition, 0.2s ease));
+    opacity: var(--p-op, 1);
+    z-index: var(--p-z, auto);
+    user-select: var(--p-us, auto);
+
+    // 2. SIZE, DISPLAY & POSITIONING
+    width: var(--p-w, auto);
+    max-width: var(--p-max-w, none);
+    min-width: var(--p-min-w, 0);
+    height: var(--p-h, fit-content);
+    max-height: var(--p-max-h, none);
+    min-height: var(--p-min-h, 0);
+    aspect-ratio: var(--p-ratio, auto);
+
+    display: var(--p-dsp, block);
+    flex: var(--p-flex, 0 1 auto);
+    gap: var(--p-gap, normal);
+    row-gap: var(--p-row-gap, var(--p-gap, normal));
+    column-gap: var(--p-col-gap, var(--p-gap, normal));
+    place-items: var(--p-pi, normal);
+    place-content: var(--p-pc, normal);
+    align-self: var(--p-algs, auto);
+    justify-self: var(--p-just, auto);
+
+    // 3. TYPOGRAPHY & TEXT TRUNCATION (Core)
+    color: var(--p-clr, var(--clr-base, var(--clr-txt-base, inherit)));
+    font-family: var(--p-fff, var(--font-face, inherit));
+    font-size: var(--p-fz, var(--font-p, 1rem));
+    font-weight: var(--p-font-w, 400);
+    text-align: var(--p-ta, start);
+    line-height: var(--p-lh, var(--txt-lhgt, 1.5));
+    letter-spacing: var(--p-ls, normal);
+
+    text-wrap: var(--p-tw, pretty); // 'pretty' evita palavras sozinhas na última linha
+    overflow: var(--p-over, visible);
+    text-overflow: var(--p-tover, clip);
+    white-space: var(--p-wsp, normal);
+    -webkit-line-clamp: var(--p-clamp, none);
+    -webkit-box-orient: var(--p-ori, vertical);
+
+    // 4. SPACING
+    padding: var(--p-pd, 0);
+    margin: var(--p-mg, 0 0 1rem 0); // Margem inferior padrão saudável para parágrafos
+
+    // 5. POSITION & TRANSFORM
+    position: var(--p-pos, relative);
+    top: var(--p-top, auto);
+    right: var(--p-right, auto);
+    bottom: var(--p-bottom, auto);
+    left: var(--p-left, auto);
+    transform: translate(var(--p-tx, 0), var(--p-ty, 0)) scale(var(--p-scale, 1));
+
+    // 6. COLORS, BACKGROUND & BORDER SYSTEM
+    background-color: var(--p-bg, transparent);
+    border-radius: var(--p-rd, 0);
+
+    border: var(--p-brd-sz, var(--brd-sz, 0)) var(--p-brd-tp, solid) var(--p-brd-clr, transparent);
+    border-top: var(--p-brdt-sz, var(--p-brd-sz, var(--brd-sz, 0))) var(--p-brdt-tp, var(--p-brd-tp, solid)) var(--p-brdt-clr, var(--p-brd-clr, transparent));
+    border-right: var(--p-brdr-sz, var(--p-brd-sz, var(--brd-sz, 0))) var(--p-brdr-tp, var(--p-brd-tp, solid)) var(--p-brdr-clr, var(--p-brd-clr, transparent));
+    border-bottom: var(--p-brdb-sz, var(--p-brd-sz, var(--brd-sz, 0))) var(--p-brdb-tp, var(--p-brd-tp, solid)) var(--p-brdb-clr, var(--p-brd-clr, transparent));
+    border-left: var(--p-brdl-sz, var(--p-brd-sz, var(--brd-sz, 0))) var(--p-brdl-tp, var(--p-brd-tp, solid)) var(--p-brdl-clr, var(--p-brd-clr, transparent));
+
+    // 7. GRID
+    grid-area: var(--p-ga, auto);
+}
+
+span {
+    // 1. TRANSITION & EFFECTS
+    transition: var(--span-trs, all var(--transition, 0.2s ease));
+    opacity: var(--span-op, 1);
+    z-index: var(--span-z, auto);
+    user-select: var(--span-us, auto);
+
+    // 2. SIZE, DISPLAY & POSITIONING
+    width: var(--span-w, auto);
+    max-width: var(--span-max-w, none);
+    min-width: var(--span-min-w, 0);
+    height: var(--span-h, auto);
+    max-height: var(--span-max-h, none);
+    min-height: var(--span-min-h, 0);
+    aspect-ratio: var(--span-ratio, auto);
+
+    display: var(--span-dsp, inline); // Comportamento nativo inline
+    flex: var(--span-flex, 0 1 auto);
+    gap: var(--span-gap, normal);
+    row-gap: var(--span-row-gap, var(--span-gap, normal));
+    column-gap: var(--span-col-gap, var(--span-gap, normal));
+    place-items: var(--span-pi, normal);
+    place-content: var(--span-pc, normal);
+    align-self: var(--span-algs, auto);
+    justify-self: var(--span-just, auto);
+
+    // 3. TYPOGRAPHY & TEXT TRUNCATION (Core)
+    color: var(--span-clr, inherit); // Herda do pai por padrão
+    font-family: var(--span-fff, inherit);
+    font-size: var(--span-fz, inherit);
+    font-weight: var(--span-font-w, inherit);
+    text-align: var(--span-ta, start);
+    line-height: var(--span-lh, inherit);
+    letter-spacing: var(--span-ls, normal);
+
+    text-wrap: var(--span-tw, wrap);
+    overflow: var(--span-over, visible);
+    text-overflow: var(--span-tover, clip);
+    white-space: var(--span-wsp, normal);
+    -webkit-line-clamp: var(--span-clamp, none);
+    -webkit-box-orient: var(--span-ori, vertical);
+
+    // 4. SPACING
+    padding: var(--span-pd, 0);
+    margin: var(--span-mg, 0);
+
+    // 5. POSITION & TRANSFORM
+    position: var(--span-pos, static);
+    top: var(--span-top, auto);
+    right: var(--span-right, auto);
+    bottom: var(--span-bottom, auto);
+    left: var(--span-left, auto);
+    transform: translate(var(--span-tx, 0), var(--span-ty, 0)) scale(var(--span-scale, 1));
+
+    // 6. COLORS, BACKGROUND & BORDER SYSTEM
+    background-color: var(--span-bg, transparent);
+    border-radius: var(--span-rd, 0);
+
+    border: var(--span-brd-sz, var(--brd-sz, 0)) var(--span-brd-tp, solid) var(--span-brd-clr, transparent);
+    border-top: var(--span-brdt-sz, var(--span-brd-sz, var(--brd-sz, 0))) var(--span-brdt-tp, var(--span-brd-tp, solid)) var(--span-brdt-clr, var(--span-brd-clr, transparent));
+    border-right: var(--span-brdr-sz, var(--span-brd-sz, var(--brd-sz, 0))) var(--span-brdr-tp, var(--span-brd-tp, solid)) var(--span-brdr-clr, var(--span-brd-clr, transparent));
+    border-bottom: var(--span-brdb-sz, var(--span-brd-sz, var(--brd-sz, 0))) var(--span-brdb-tp, var(--span-brd-tp, solid)) var(--span-brdb-clr, var(--span-brd-clr, transparent));
+    border-left: var(--span-brdl-sz, var(--span-brd-sz, var(--brd-sz, 0))) var(--span-brdl-tp, var(--span-brd-tp, solid)) var(--span-brdl-clr, var(--span-brd-clr, transparent));
+
+    // 7. GRID
+    grid-area: var(--span-ga, auto);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    // 1. TRANSITION & EFFECTS
+    transition: var(#{&}-trs, all var(--transition, 0.2s ease));
+    opacity: var(#{&}-op, 1);
+    z-index: var(#{&}-z, auto);
+    user-select: var(#{&}-us, auto);
+
+    // 2. SIZE, DISPLAY & POSITIONING
+    width: var(#{&}-w, auto);
+    max-width: var(#{&}-max-w, none);
+    min-width: var(#{&}-min-w, 0);
+    height: var(#{&}-h, fit-content);
+    max-height: var(#{&}-max-h, none);
+    min-height: var(#{&}-min-h, None);
+    aspect-ratio: var(#{&}-ratio, auto);
+
+    display: var(#{&}-dsp, block);
+    flex: var(#{&}-flex, 0 1 auto);
+    gap: var(#{&}-gap, normal);
+    row-gap: var(#{&}-row-gap, var(#{&}-gap, normal));
+    column-gap: var(#{&}-col-gap, var(#{&}-gap, normal));
+    place-items: var(#{&}-pi, normal);
+    place-content: var(#{&}-pc, normal);
+    align-self: var(#{&}-algs, auto);
+    justify-self: var(#{&}-just, auto);
+
+    // 3. TYPOGRAPHY & TEXT TRUNCATION (Core)
+    color: var(#{&}-clr, var(--clr-base, var(--clr-txt-low, inherit)));
+    font-family: var(#{&}-fff, var(--font-face, inherit));
+    font-weight: var(#{&}-font-w, 700);
+    text-align: var(#{&}-ta, start);
+    line-height: var(#{&}-lh, var(--txt-lhgt, 1.2));
+    letter-spacing: var(#{&}-ls, normal);
+
+    text-wrap: var(#{&}-tw, balance);
+    overflow: var(#{&}-over, visible);
+    text-overflow: var(#{&}-tover, clip);
+    white-space: var(#{&}-wsp, normal);
+    -webkit-line-clamp: var(#{&}-clamp, none);
+    -webkit-box-orient: var(#{&}-ori, vertical);
+
+    // 4. SPACING
+    padding: var(#{&}-pd, 0);
+    margin: var(#{&}-mg, 0);
+
+    // 5. POSITION & TRANSFORM
+    position: var(#{&}-pos, relative);
+    top: var(#{&}-top, auto);
+    right: var(#{&}-right, auto);
+    bottom: var(#{&}-bottom, auto);
+    left: var(#{&}-left, auto);
+    transform: translate(var(#{&}-tx, 0), var(#{&}-ty, 0)) scale(var(#{&}-scale, 1));
+
+    // 6. COLORS, BACKGROUND & BORDER SYSTEM
+    background-color: var(#{&}-bg, transparent);
+    border-radius: var(#{&}-rd, 0);
+
+    border: var(#{&}-brd-sz, var(--brd-sz, 0)) var(#{&}-brd-tp, solid) var(#{&}-brd-clr, transparent);
+    border-top: var(#{&}-brdt-sz, var(#{&}-brd-sz, var(--brd-sz, 0))) var(#{&}-brdt-tp, var(#{&}-brd-tp, solid)) var(#{&}-brdt-clr, var(#{&}-brd-clr, transparent));
+    border-right: var(#{&}-brdr-sz, var(#{&}-brd-sz, var(--brd-sz, 0))) var(#{&}-brdr-tp, var(#{&}-brd-tp, solid)) var(#{&}-brdr-clr, var(#{&}-brd-clr, transparent));
+    border-bottom: var(#{&}-brdb-sz, var(#{&}-brd-sz, var(--brd-sz, 0))) var(#{&}-brdb-tp, var(#{&}-brd-tp, solid)) var(#{&}-brdb-clr, var(#{&}-brd-clr, transparent));
+    border-left: var(#{&}-brdl-sz, var(#{&}-brd-sz, var(--brd-sz, 0))) var(#{&}-brdl-tp, var(#{&}-brd-tp, solid)) var(#{&}-brdl-clr, var(#{&}-brd-clr, transparent));
+
+    // 7. GRID
+    grid-area: var(#{&}-ga, auto);
+}
+
+// Escalas de Font-Size específicas para cada Headings utilizando o seletor SASS interpolation
+h1 {
+    font-size: var(--h1-fz, var(--font-h1, 2.25rem));
+}
+
+h2 {
+    font-size: var(--h2-fz, var(--font-h2, 1.875rem));
+}
+
+h3 {
+    font-size: var(--h3-fz, var(--font-h3, 1.5rem));
+}
+
+h4 {
+    font-size: var(--h4-fz, var(--font-h4, 1.25rem));
+}
+
+h5 {
+    font-size: var(--h5-fz, var(--font-h5, 1.1rem));
+}
+
+h6 {
+    font-size: var(--h6-fz, var(--font-h6, 1rem));
+}
+
+strong,
+b,
+em,
+i,
+small {
+    // 1. TRANSITION & EFFECTS
+    transition: var(#{&}-trs, all var(--transition, 0.2s ease));
+    opacity: var(#{&}-op, 1);
+    z-index: var(#{&}-z, auto);
+    user-select: var(#{&}-us, auto);
+
+    // 2. SIZE, DISPLAY & POSITIONING
+    width: var(#{&}-w, auto);
+    max-width: var(#{&}-max-w, none);
+    min-width: var(#{&}-min-w, 0);
+    height: var(#{&}-h, auto);
+    max-height: var(#{&}-max-h, none);
+    min-height: var(#{&}-min-h, 0);
+    aspect-ratio: var(#{&}-ratio, auto);
+
+    display: var(#{&}-dsp, inline);
+    flex: var(#{&}-flex, 0 1 auto);
+    gap: var(#{&}-gap, normal);
+    row-gap: var(#{&}-row-gap, var(#{&}-gap, normal));
+    column-gap: var(#{&}-col-gap, var(#{&}-gap, normal));
+    place-items: var(#{&}-pi, normal);
+    place-content: var(#{&}-pc, normal);
+    align-self: var(#{&}-algs, auto);
+    justify-self: var(#{&}-just, auto);
+
+    // 3. TYPOGRAPHY & TEXT TRUNCATION (Core)
+    color: var(#{&}-clr, inherit);
+    font-family: var(#{&}-fff, inherit);
+    text-align: var(#{&}-ta, start);
+    line-height: var(#{&}-lh, inherit);
+    letter-spacing: var(#{&}-ls, normal);
+
+    text-wrap: var(#{&}-tw, wrap);
+    overflow: var(#{&}-over, visible);
+    text-overflow: var(#{&}-tover, clip);
+    white-space: var(#{&}-wsp, normal);
+    -webkit-line-clamp: var(#{&}-clamp, none);
+    -webkit-box-orient: var(#{&}-ori, vertical);
+
+    // 4. SPACING
+    padding: var(#{&}-pd, 0);
+    margin: var(#{&}-mg, 0);
+
+    // 5. POSITION & TRANSFORM
+    position: var(#{&}-pos, static);
+    top: var(#{&}-top, auto);
+    right: var(#{&}-right, auto);
+    bottom: var(#{&}-bottom, auto);
+    left: var(#{&}-left, auto);
+    transform: translate(var(#{&}-tx, 0), var(#{&}-ty, 0)) scale(var(#{&}-scale, 1));
+
+    // 6. COLORS, BACKGROUND & BORDER SYSTEM
+    background-color: var(#{&}-bg, transparent);
+    border-radius: var(#{&}-rd, 0);
+
+    border: var(#{&}-brd-sz, var(--brd-sz, 0)) var(#{&}-brd-tp, solid) var(#{&}-brd-clr, transparent);
+    border-top: var(#{&}-brdt-sz, var(#{&}-brd-sz, var(--brd-sz, 0))) var(#{&}-brdt-tp, var(#{&}-brd-tp, solid)) var(#{&}-brdt-clr, var(#{&}-brd-clr, transparent));
+    border-right: var(#{&}-brdr-sz, var(#{&}-brd-sz, var(--brd-sz, 0))) var(#{&}-brdr-tp, var(#{&}-brd-tp, solid)) var(#{&}-brdr-clr, var(#{&}-brd-clr, transparent));
+    border-bottom: var(#{&}-brdb-sz, var(#{&}-brd-sz, var(--brd-sz, 0))) var(#{&}-brdb-tp, var(#{&}-brd-tp, solid)) var(#{&}-brdb-clr, var(#{&}-brd-clr, transparent));
+    border-left: var(#{&}-brdl-sz, var(#{&}-brd-sz, var(--brd-sz, 0))) var(#{&}-brdl-tp, var(#{&}-brd-tp, solid)) var(#{&}-brdl-clr, var(#{&}-brd-clr, transparent));
+
+    // 7. GRID
+    grid-area: var(#{&}-ga, auto);
+}
+
+// Font sizes individuais para elementos específicos
+strong,
+b {
+    font-size: var(--strong-fz, inherit);
+    font-weight: var(--strong-font-w, 700);
+}
+
+em,
+i {
+    font-size: var(--em-fz, inherit);
+    font-style: italic;
+    font-weight: var(--em-font-w, inherit);
+}
+
+small {
+    font-size: var(--small-fz, var(--font-small, 0.85rem));
+    font-weight: var(--small-font-w, 400);
+}

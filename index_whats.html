@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste - Envio de WhatsApp</title>
+    
+    <!-- Link para o seu CSS principal -->
+    <link rel="stylesheet" href="/src/assets/css/main.css">
+    
+    <style>
+        .test-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            background-color: #ffffff;
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: #25D366;
+            outline: none;
+        }
+        .btn-send {
+            width: 100%;
+            padding: 15px;
+            background-color: #25D366;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .btn-send:hover {
+            background-color: #128C7E;
+        }
+        .btn-send:disabled {
+            background-color: #a5d6a7;
+            cursor: not-allowed;
+        }
+        .info-box {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border-left: 5px solid #25D366;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="test-container">
+        <h2 style="text-align: center; margin-bottom: 30px;">Chat do WhatsApp</h2>
+        
+        <div class="form-group">
+            <label for="numero">Número Destino (com código país e DDD):</label>
+            <input type="text" id="numero" placeholder="Ex: 5511999999999" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="mensagem">Mensagem a ser enviada:</label>
+            <textarea id="mensagem" rows="4" placeholder="Digite sua mensagem aqui..." required></textarea>
+        </div>
+        
+        <button id="btnEnviar" class="btn-send">Enviar Mensagem</button>
+
+        <p id="statusMsg" style="margin-top: 15px; font-weight: bold; text-align: center;"></p>
+
+        <div class="info-box">
+            <strong>Dica:</strong> Abra o console do navegador (F12) para ver os logs do Socket.io. Quando uma mensagem chegar no Webhook, ela será exibida no console!
+        </div>
+    </div>
+
+    <!-- Scripts necessários -->
+    <script src="/socket.io/socket.io.js"></script>
+    
+    <!-- Script Module para integrar o envio e socket -->
+    <script type="module">
+        // Ao importar, o FNTND-script-whats.js já inicializa o Socket.io nos bastidores
+        import { enviaMensagemWhats } from '/src/js/FNTND-script-whats.js';
+
+        const btnEnviar = document.getElementById('btnEnviar');
+        const inputNumero = document.getElementById('numero');
+        const inputMensagem = document.getElementById('mensagem');
+        const statusMsg = document.getElementById('statusMsg');
+
+        btnEnviar.addEventListener('click', async () => {
+            const numero = inputNumero.value.trim();
+            const mensagem = inputMensagem.value.trim();
+
+            if (!numero || !mensagem) {
+                statusMsg.textContent = "Por favor, preencha o número e a mensagem!";
+                statusMsg.style.color = "#d32f2f";
+                return;
+            }
+
+            statusMsg.textContent = "Enviando mensagem...";
+            statusMsg.style.color = "#1976d2";
+            btnEnviar.disabled = true;
+
+            try {
+                // Chama a função exportada do nosso script
+                const result = await enviaMensagemWhats(numero, mensagem);
+                statusMsg.textContent = "Mensagem enviada com sucesso!";
+                statusMsg.style.color = "#388e3c";
+                inputMensagem.value = ""; // limpa o campo
+            } catch (error) {
+                statusMsg.textContent = "Erro ao enviar a mensagem. Verifique o console do navegador.";
+                statusMsg.style.color = "#d32f2f";
+            } finally {
+                btnEnviar.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

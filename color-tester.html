@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en" data-colorpalette="oklch" data-colormode="modeauto">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unified Color System Tester</title>
+    <style>
+        /* 
+         * ==========================================
+         * CORE VARIABLES & DEFAULTS
+         * ==========================================
+         */
+        :root {
+            /* Primitives */
+            --c01: #3498db;
+            --neutral-gray: #808080;
+            --chroma-factor: 1;
+
+            /* 
+               Pre-processed Base with Chroma Adjustment 
+               This ensures the same variable controls saturation for BOTH palettes.
+               Even for Color-Mix, we use OKLCH relative syntax to tune the base saturation first.
+            */
+            --c01-tuned: oklch(from var(--c01) l calc(c * var(--chroma-factor)) h);
+
+            /* UI Defaults */
+            --font-main: system-ui, sans-serif;
+            --radius: 8px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            font-family: var(--font-main);
+            overflow: hidden;
+            background-color: var(--bg-app);
+            color: var(--txt-primary);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* 
+         * ==========================================
+         * COLOR PALETTE: OKLCH
+         * ==========================================
+         */
+
+        /* Light Mode (OKLCH) */
+        [data-colorpalette="oklch"][data-colormode="modelgt"],
+        [data-colorpalette="oklch"][data-colormode="modeauto"] {
+            /* Structure (Neutral) */
+            --clr-board: oklch(from var(--neutral-gray) 90% c h);
+            --bg-app: oklch(from var(--neutral-gray) 96% c h);
+
+            /* C01 Scale - Uses --c01-tuned */
+            --c01-bg: oklch(from var(--c01-tuned) calc(l + (1 - l) * 0.995) c h);
+            --c01-ulgt: oklch(from var(--c01-tuned) calc(l + (1 - l) * 0.985) c h);
+            --c01-slgt: oklch(from var(--c01-tuned) calc(l + (1 - l) * 0.80) c h);
+            --c01-lgt: oklch(from var(--c01-tuned) calc(l + (1 - l) * 0.45) c h);
+            --c01-base: var(--c01-tuned);
+            --c01-drk: oklch(from var(--c01-tuned) calc(l * 0.7) c h);
+            --c01-sdrk: oklch(from var(--c01-tuned) calc(l * 0.4) c h);
+            --c01-udrk: oklch(from var(--c01-tuned) calc(l * 0.2) c h);
+
+            /* Semantic Mapping */
+            --bg-card: white;
+            --bg-surface: var(--c01-ulgt);
+            --border-subtle: var(--c01-slgt);
+            --txt-primary: var(--c01-udrk);
+            --txt-secondary: var(--c01-drk);
+            --grad-primary: linear-gradient(135deg, var(--c01-lgt), var(--c01-drk));
+        }
+
+        /* Dark Mode (OKLCH) */
+        [data-colorpalette="oklch"][data-colormode="modedrk"] {
+            /* Structure (Neutral Dark #121212 approx) */
+            --bg-app: oklch(from var(--neutral-gray) 13% c h);
+            --clr-board: oklch(from var(--neutral-gray) 20% c h);
+
+            /* C01 Scale */
+            --c01-bg: oklch(from var(--c01-tuned) calc(l + (1 - l) * 0.995) c h);
+            --c01-ulgt: oklch(from var(--c01-tuned) calc(l + (1 - l) * 0.985) c h);
+            --c01-slgt: oklch(from var(--c01-tuned) calc(l + (1 - l) * 0.80) c h);
+            --c01-lgt: oklch(from var(--c01-tuned) calc(l + (1 - l) * 0.45) c h);
+            --c01-base: var(--c01-tuned);
+            --c01-drk: oklch(from var(--c01-tuned) calc(l * 0.7) c h);
+            --c01-sdrk: oklch(from var(--c01-tuned) calc(l * 0.4) c h);
+            --c01-udrk: oklch(from var(--c01-tuned) calc(l * 0.2) c h);
+
+            /* Semantic Mapping (Dark Context) */
+            --bg-card: var(--c01-udrk);
+            --bg-surface: var(--c01-sdrk);
+            --border-subtle: var(--c01-drk);
+            --txt-primary: var(--c01-ulgt);
+            --txt-secondary: var(--c01-lgt);
+            --grad-primary: linear-gradient(135deg, var(--c01-lgt), var(--c01-drk));
+        }
+
+        /* Auto Mode Media Query Override (OKLCH) */
+        @media (prefers-color-scheme: dark) {
+            [data-colorpalette="oklch"][data-colormode="modeauto"] {
+                --bg-app: oklch(from var(--neutral-gray) 13% c h);
+                --bg-card: var(--c01-udrk);
+                --bg-surface: var(--c01-sdrk);
+                --border-subtle: var(--c01-drk);
+                --txt-primary: var(--c01-ulgt);
+                --txt-secondary: var(--c01-lgt);
+            }
+        }
+
+        /* 
+         * ==========================================
+         * COLOR PALETTE: COLOR-MIX
+         * ==========================================
+         */
+
+        /* Light Mode (Mix) */
+        [data-colorpalette="colormix"][data-colormode="modelgt"],
+        [data-colorpalette="colormix"][data-colormode="modeauto"] {
+            /* Structure (Neutral) */
+            --bg-app: color-mix(in srgb, var(--neutral-gray), white 90%);
+
+            /* C01 Scale - Uses --c01-tuned now! */
+            --c01-bg: color-mix(in srgb, var(--c01-tuned), white 97%);
+            --c01-ulgt: color-mix(in srgb, var(--c01-tuned), white 90%);
+            --c01-slgt: color-mix(in srgb, var(--c01-tuned), white 70%);
+            --c01-lgt: color-mix(in srgb, var(--c01-tuned), white 40%);
+            --c01-base: var(--c01-tuned);
+            --c01-drk: color-mix(in srgb, var(--c01-tuned), black 20%);
+            --c01-sdrk: color-mix(in srgb, var(--c01-tuned), black 50%);
+            --c01-udrk: color-mix(in srgb, var(--c01-tuned), black 80%);
+
+            /* Semantic Mapping */
+            --bg-card: white;
+            --bg-surface: var(--c01-ulgt);
+            --border-subtle: var(--c01-slgt);
+            --txt-primary: var(--c01-udrk);
+            --txt-secondary: var(--c01-drk);
+            --grad-primary: linear-gradient(135deg, var(--c01-lgt), var(--c01-drk));
+        }
+
+        /* Dark Mode (Mix) */
+        [data-colorpalette="colormix"][data-colormode="modedrk"] {
+            /* Structure (Neutral Dark #121212 approx) */
+            --bg-app: color-mix(in srgb, var(--neutral-gray), black 86%);
+
+            /* C01 Scale - Uses --c01-tuned */
+            --c01-bg: color-mix(in srgb, var(--c01-tuned), white 97%);
+            --c01-ulgt: color-mix(in srgb, var(--c01-tuned), white 90%);
+            --c01-slgt: color-mix(in srgb, var(--c01-tuned), white 70%);
+            --c01-lgt: color-mix(in srgb, var(--c01-tuned), white 40%);
+            --c01-base: var(--c01-tuned);
+            --c01-drk: color-mix(in srgb, var(--c01-tuned), black 20%);
+            --c01-sdrk: color-mix(in srgb, var(--c01-tuned), black 50%);
+            --c01-udrk: color-mix(in srgb, var(--c01-tuned), black 80%);
+
+            /* Semantic Mapping */
+            --bg-card: var(--c01-udrk);
+            --bg-surface: var(--c01-sdrk);
+            --border-subtle: var(--c01-drk);
+            --txt-primary: var(--c01-ulgt);
+            --txt-secondary: var(--c01-lgt);
+            --grad-primary: linear-gradient(135deg, var(--c01-lgt), var(--c01-drk));
+        }
+
+        /* Auto Mode Media Query Override (Mix) */
+        @media (prefers-color-scheme: dark) {
+            [data-colorpalette="colormix"][data-colormode="modeauto"] {
+                --bg-app: color-mix(in srgb, var(--neutral-gray), black 86%);
+                --bg-card: var(--c01-udrk);
+                --bg-surface: var(--c01-sdrk);
+                --border-subtle: var(--c01-drk);
+                --txt-primary: var(--c01-ulgt);
+                --txt-secondary: var(--c01-lgt);
+            }
+        }
+
+        /* 
+         * ==========================================
+         * LAYOUT & PANE
+         * ==========================================
+         */
+
+        .layout-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            padding-bottom: 250px;
+        }
+
+        .pane {
+            flex: 1;
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* 
+         * ==========================================
+         * COMPONENTS
+         * ==========================================
+         */
+        h1,
+        h2,
+        h3 {
+            margin-top: 0;
+        }
+
+        .card {
+            background: var(--bg-card);
+            padding: 24px;
+            border-radius: var(--radius);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .input-surface {
+            background: var(--bg-surface);
+            color: var(--txt-primary);
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-subtle);
+            width: 100%;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: var(--radius);
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            transition: transform 0.1s;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background-color: var(--c01-base);
+            color: white;
+        }
+
+        .btn-outline {
+            border: 2px solid var(--c01-base);
+            color: var(--txt-primary);
+            background: transparent;
+        }
+
+        .btn-ghost {
+            background: var(--bg-surface);
+            color: var(--txt-primary);
+            opacity: 0.8;
+        }
+
+        .grid-colors {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .color-swatch {
+            height: 60px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: var(--txt-primary);
+            font-weight: bold;
+            border: 1px solid var(--border-subtle);
+        }
+
+        /* 
+         * ==========================================
+         * CONTROLS (Fixed Bottom)
+         * ==========================================
+         */
+        .control-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+            color: #333;
+            /* Always light controls */
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 100;
+            height: 250px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .control-bar.collapsed {
+            transform: translateY(250px);
+        }
+
+        .collapse-tab {
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 40px;
+            background: white;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
+            font-weight: bold;
+            color: #333;
+            font-size: 12px;
+            user-select: none;
+        }
+
+        .bar-content {
+            display: flex;
+            height: 100%;
+        }
+
+        /* Bar Sections */
+        .bar-section {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            border-right: 1px solid #eee;
+        }
+
+        .bar-section:last-child {
+            border-right: none;
+        }
+
+        .bar-section.main-controls {
+            flex: 0 0 350px;
+            background: #fff;
+        }
+
+        .bar-section.scale-view {
+            flex: 1;
+            background: #f9f9f9;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .control-group label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input[type="color"] {
+            border: none;
+            width: 40px;
+            height: 30px;
+            cursor: pointer;
+            background: none;
+            padding: 0;
+        }
+
+        select {
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-family: inherit;
+        }
+
+        .neutral-squares {
+            display: flex;
+            gap: 5px;
+        }
+
+        .square {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layout-container">
+        <div class="pane">
+            <h1>Color System Output</h1>
+            <p>Evaluating <span id="lblPalette">OKLCH</span> in <span id="lblMode">Auto</span> mode.</p>
+
+            <div class="card">
+                <h3>Card Component (Surface)</h3>
+                <p>Background: <code>--bg-card</code></p>
+                <div style="margin-top: 15px; display: flex; gap: 10px;">
+                    <button class="btn btn-primary">Primary</button>
+                    <button class="btn btn-outline">Outline</button>
+                    <button class="btn btn-ghost">Ghost</button>
+                </div>
+            </div>
+
+            <div
+                style="background: var(--bg-surface); padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid var(--border-subtle);">
+                <h3>Surface Area (Input / Section)</h3>
+                <p>Background: <code>--bg-surface</code></p>
+                <input type="text" class="input-surface" value="Input Field Example">
+            </div>
+
+            <div
+                style="height: 80px; border-radius: 12px; background: var(--grad-primary); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+                Gradient Primary
+            </div>
+
+            <h3 style="margin-top: 30px;">Typography</h3>
+            <p style="color: var(--txt-primary); font-size: 1.2rem;">Primary Text - The quick brown fox jumps over the
+                lazy dog.</p>
+            <p style="color: var(--txt-secondary);">Secondary Text - Used for subtitles, captions, and less emphatic
+                content.</p>
+        </div>
+    </div>
+
+    <!-- CONTROL BAR -->
+    <div class="control-bar" id="controlBar">
+        <div class="collapse-tab" onclick="toggleBar()">
+            Settings
+        </div>
+
+        <div class="bar-content">
+            <!-- Main Controls -->
+            <div class="bar-section main-controls">
+
+                <div class="control-group">
+                    <label>Color Palette</label>
+                    <select id="selPalette" onchange="updateSystem()">
+                        <option value="oklch">OKLCH (Reactive)</option>
+                        <option value="colormix">Color Mix (Traditional)</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label>Color Mode</label>
+                    <select id="selMode" onchange="updateSystem()">
+                        <option value="modeauto">Auto (System)</option>
+                        <option value="modelgt">Light Mode</option>
+                        <option value="modedrk">Dark Mode</option>
+                    </select>
+                </div>
+
+                <hr style="width: 100%; border: 0; border-top: 1px solid #eee; margin: 5px 0;">
+
+                <div class="control-group">
+                    <label>--c01 (Primary)</label>
+                    <input type="color" id="pickerC01" value="#3498db" oninput="updateColor('--c01', this.value)">
+                </div>
+
+                <div class="control-group">
+                    <label>Neutral</label>
+                    <div class="neutral-squares">
+                        <div class="square" style="background: #e0e0e0; cursor: pointer;"
+                            onclick="updateColor('--neutral-gray', '#e0e0e0')"></div>
+                        <div class="square" style="background: #808080; cursor: pointer;"
+                            onclick="updateColor('--neutral-gray', '#808080')"></div>
+                        <div class="square" style="background: #333333; cursor: pointer;"
+                            onclick="updateColor('--neutral-gray', '#333333')"></div>
+                        <div class="square" style="background: #aab6bd; cursor: pointer;"
+                            onclick="updateColor('--neutral-gray', '#aab6bd')"></div>
+                    </div>
+                </div>
+
+                <div class="control-group" style="flex-direction: column; align-items: flex-start; gap: 5px;">
+                    <label style="font-size: 12px;">Chroma Factor: <span id="chromaVal">1.0</span></label>
+                    <input type="range" id="chromaSlider" min="0" max="2" step="0.1" value="1" style="width: 100%;"
+                        oninput="updateChroma(this.value)">
+                </div>
+            </div>
+
+            <!-- Visualization -->
+            <div class="bar-section scale-view">
+                <h4>Generated Scale</h4>
+                <div class="grid-colors">
+                    <div class="color-swatch" style="background: var(--c01-bg)">bg</div>
+                    <div class="color-swatch" style="background: var(--c01-ulgt)">ulgt</div>
+                    <div class="color-swatch" style="background: var(--c01-slgt)">slgt</div>
+                    <div class="color-swatch" style="background: var(--c01-lgt)">lgt</div>
+                    <div class="color-swatch" style="background: var(--c01-base); color: white;">base</div>
+                    <div class="color-swatch" style="background: var(--c01-drk); color: white;">drk</div>
+                    <div class="color-swatch" style="background: var(--c01-sdrk); color: white;">sdrk</div>
+                    <div class="color-swatch" style="background: var(--c01-udrk); color: white;">udrk</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const root = document.documentElement;
+        const bar = document.getElementById('controlBar');
+
+        function updateSystem() {
+            const palette = document.getElementById('selPalette').value;
+            const mode = document.getElementById('selMode').value;
+
+            root.setAttribute('data-colorpalette', palette);
+            root.setAttribute('data-colormode', mode);
+
+            document.getElementById('lblPalette').textContent = palette.toUpperCase();
+            document.getElementById('lblMode').textContent = mode === 'modeauto' ? 'Auto' : (mode === 'modelgt' ? 'Light' : 'Dark');
+        }
+
+        function updateColor(variable, value) {
+            root.style.setProperty(variable, value);
+        }
+
+        function updateChroma(value) {
+            root.style.setProperty('--chroma-factor', value);
+            document.getElementById('chromaVal').textContent = value;
+        }
+
+        function toggleBar() {
+            bar.classList.toggle('collapsed');
+        }
+    </script>
+</body>
+
+</html>

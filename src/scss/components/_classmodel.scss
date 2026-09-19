@@ -1,0 +1,118 @@
+@use '../settings' as *;
+
+
+// ---------------- SEMANTIC HTML ----------------
+// ---------------- SEMANTIC HTML ----------------
+
+// »»————- ★ ?Gmain Model ★ ————-««
+main {
+    @include classmodel('main');
+
+    &[el*="main"] {}
+}
+
+// »»————- ★ ?Gnav Model ★ ————-««
+nav {
+    @include classmodel('nav');
+
+    &[el*="nav"] {}
+}
+
+// »»————- ★ ?Gheader Model ★ ————-««
+header {
+    @include classmodel('header');
+
+    &[el*="header"] {}
+}
+
+// »»————- ★ ?Gfooter Model ★ ————-««
+footer {
+    @include classmodel('footer');
+
+    &[el*="footer"] {}
+}
+
+// »»————- ★ ?Gaside Model ★ ————-««
+aside {
+    @include classmodel('aside');
+
+    &[el*="aside"] {}
+}
+
+// »»————- ★ ?Garticle Model ★ ————-««
+article {
+    @include classmodel('article');
+
+    &[el*="article"] {}
+}
+
+
+
+
+// ---------------- SECTION STRUCTURE ---------------- 
+// ---------------- SECTION STRUCTURE ---------------- 
+
+// »»————- ★ ?Gsect Model ★ ————-««
+.Gsect {
+    @include classmodel('sect');
+    width: 100%;
+    // Regras específicas de fundo/espaçamento vertical da seção
+}
+
+// »»————- ★ ?Gsectcont Model ★ ————-««
+.Gsectcont {
+    @include classmodel('sectcont');
+    width: 100%;
+    margin-inline: auto;
+    box-sizing: border-box;
+
+    &[el*="sectcont"] {
+        max-width: 1200px;
+
+        @each $name, $value in $breakpoints {
+            &[el*="-#{$name}"] {
+                max-width: $value;
+            }
+        }
+    }
+}
+
+
+
+// ---------------- CARD STRUCTURE ---------------- 
+// ---------------- CARD STRUCTURE ---------------- 
+
+// »»————- ★ ?Gcard Model ★ ————-««
+.Gcard {
+    @include classmodel('card');
+
+    &[el*="card"] {}
+}
+
+// »»————- ★ ?Gcardheader Model ★ ————-««
+.Gcardheader {
+    @include classmodel('cardheader');
+
+    &[el*="cardheader"] {}
+}
+
+// »»————- ★ ?Gcardbody Model ★ ————-««
+.Gcardbody {
+    @include classmodel('cardbody');
+
+    &[el*="cardbody"] {}
+}
+
+// »»————- ★ ?Gcardfooter Model ★ ————-««
+.Gcardfooter {
+    @include classmodel('cardfooter');
+
+    &[el*="cardfooter"] {}
+}
+
+// »»————- ★ ?Gcardhalf Model ★ ————-««
+.Gcardhalf {
+    @include classmodel('cardhalf');
+
+    &[el*="cardhalf"] {}
+}

@@ -1,0 +1,7 @@
+// Config (Antigo Core)
+// Centraliza variáveis, cores e mixins para serem usados nos componentes.
+// ESTE ARQUIVO NÃO DEVE GERAR CSS E NÃO DEVE IMPORTAR COMPONENTES.
+
+@forward 'settings/variables';
+@forward 'settings/colors';
+@forward 'settings/mixins';

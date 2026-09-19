@@ -1,0 +1,427 @@
+@use "sass:map";
+@use "sass:list";
+
+$breakpoints: (
+    ex: 1480px,
+    xl: 1280px,
+    lg: 1024px,
+    md: 768px,
+    sm: 576px,
+    ) !default;
+
+$breakcontainer: (
+    sm: 580px,
+    md: 900px,
+    lg: 1280px,
+    ) !default;
+
+// Alternative interpolate
+$min-sm: '(min-width: 580px)';
+$min-md: '(min-width: 900px)';
+$min-lg: '(min-width: 1280px)';
+$max-sm: '(max-width: 580px)';
+$max-md: '(max-width: 900px)';
+$max-lg: '(max-width: 1280px)';
+
+$gutters: (
+    xs: 0.5rem,
+    sm: 0.5rem,
+    md: 0.5rem,
+    lg: 1rem,
+    xl: 1rem,
+    ex: 1rem,
+    fl: 1rem,
+    ) !default;
+
+@mixin media-min($breakpoint) {
+    @if map.has-key($breakpoints, $breakpoint) {
+        $breakpoint-value: map.get($breakpoints, $breakpoint
+        );
+
+    @media (min-width: $breakpoint-value) {
+        @content;
+    }
+}
+
+@else {
+    @warn 'Invalid breakpoint: #{$breakpoint}.';
+}
+}
+
+@mixin media-max($breakpoint) {
+    @if map.has-key($breakpoints, $breakpoint) {
+        $breakpoint-value: map.get($breakpoints, $breakpoint);
+
+        @media (max-width: ($breakpoint-value - 1)) {
+            @content;
+        }
+    }
+
+    @else {
+        @warn 'Invalid breakpoint: #{$breakpoint}.';
+    }
+}
+
+@mixin media-and($breakpoint-start, $breakpoint-end) {
+    @if map.has-key($breakpoints, $breakpoint-start) {
+        // aqui ele compara o valor passado de inicio com o array breakpoints
+        $breakpoint-start-value: map.get($breakpoints, $breakpoint-start);
+
+        @if map.has-key($breakpoints, $breakpoint-end) {
+            // aqui ele compara o valor passado de end com o array breakpoints
+            $breakpoint-end-value: map.get($breakpoints, $breakpoint-end);
+
+            @media (min-width: ($breakpoint-start-value)) and (max-width: ($breakpoint-end-value - 1)) {
+                @content;
+            }
+        }
+    }
+
+    @else {
+        @warn 'Invalid breakpoint: #{$breakpoint}.';
+    }
+}
+
+
+/// Mixin for @container
+
+// *** Sample for use
+// @include container-max(sm) {
+//   background-color: salmon;
+//   font-size: 14px;
+// }
+
+// @include container-min(lg) {
+//   background-color: lightgreen;
+//   font-size: 20px;
+// }
+
+@mixin GenScroll($size, $tsize, $bg-color, $thumb, $hover, $sizeMOB) {
+
+    @include media-min(md) {
+
+        // Barra de rolagem inteira.
+        &::-webkit-scrollbar {
+            @include transition;
+            background-color: transparent;
+            width: $size;
+            height: $size;
+        }
+
+        // Barra arrastável 
+        &::-webkit-scrollbar-thumb {
+            border-radius: 3px;
+            background-color: transparent;
+            border: calc(($size - $tsize) / 2) solid $bg-color;
+        }
+
+        &::-webkit-scrollbar-track {
+            margin-right: -10px;
+        }
+
+        // Botões da barra
+        &::-webkit-scrollbar-button {
+            background-color: transparent;
+            height: 10px;
+            width: 10px;
+        }
+
+        &:hover {
+            &::-webkit-scrollbar {
+                background-color: $bg-color;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                background-color: $thumb;
+                border-color: $bg-color;
+            }
+
+            &::-webkit-scrollbar-thumb:hover {
+                background-color: $hover;
+                cursor: pointer;
+            }
+        }
+    }
+
+    @include media-max(md) {
+        &::-webkit-scrollbar {
+            background-color: $bg-color;
+            width: $sizeMOB;
+            height: $sizeMOB;
+        }
+
+        // Barra arrastável 
+        &::-webkit-scrollbar-thumb {
+            border-radius: 3px;
+            background-color: $thumb;
+            border: calc(($size - $tsize) / 2) solid $bg-color;
+        }
+
+        &::-webkit-scrollbar-button {
+            background-color: transparent;
+            height: 10px;
+            width: 10px;
+        }
+    }
+}
+
+
+
+$transition-base: all 0.3s ease-in;
+
+@mixin transition($transition...) {
+    @if list.length($transition)==0 {
+        transition: $transition-base;
+    }
+
+    @else {
+        transition: $transition;
+    }
+}
+
+// -----------------------------------------------------------------------------
+// INDIVIDUAL GRID BREAKPOINTS (.mgrid and .cgrid)
+// -----------------------------------------------------------------------------
+
+@mixin mbreak-min($breakpoint) {
+    @if map.has-key($breakpoints, $breakpoint) {
+        @media (min-width: #{map.get($breakpoints, $breakpoint)}) {
+            @content;
+        }
+    }
+
+    @else {
+        @warn "Breakpoint `#{$breakpoint}` não encontrado no mapa `$breakpoints`.";
+    }
+}
+
+@mixin mbreak-max($breakpoint) {
+    @if map.has-key($breakpoints, $breakpoint) {
+        @media (max-width: #{map.get($breakpoints, $breakpoint)}) {
+            @content;
+        }
+    }
+
+    @else {
+        @warn "Breakpoint `#{$breakpoint}` não encontrado no mapa `$breakpoints`.";
+    }
+}
+
+@mixin cbreak-min($breakpoint) {
+    @if map.has-key($breakpoints, $breakpoint) {
+        @container (min-width: #{map.get($breakpoints, $breakpoint)}) {
+            @content;
+        }
+    }
+
+    @else {
+        @warn "Breakpoint `#{$breakpoint}` não encontrado no mapa `$breakpoints`.";
+    }
+}
+
+@mixin cbreak-max($breakpoint) {
+    @if map.has-key($breakpoints, $breakpoint) {
+        @container (max-width: #{map.get($breakpoints, $breakpoint)}) {
+            @content;
+        }
+    }
+
+    @else {
+        @warn "Breakpoint `#{$breakpoint}` não encontrado no mapa `$breakpoints`.";
+    }
+}
+
+// -----------------------------------------------------------------------------
+// GRID SYSTEM GENERATOR (.mgrid and .cgrid)
+// -----------------------------------------------------------------------------
+
+@mixin generate-grid-system($type) {
+    @include _grid-utilities("");
+
+    @each $bp, $val in $breakpoints {
+        @if $type =='media' {
+            @media (max-width: $val) {
+                @include _grid-utilities($bp);
+            }
+        }
+
+        @else if $type =='container' {
+            @container (max-width: #{$val}) {
+                @include _grid-utilities($bp);
+            }
+        }
+    }
+}
+
+@mixin _grid-utilities($prefix) {
+    &>[c#{$prefix}="0"] {
+        display: none;
+    }
+
+    @for $i from 1 through 12 {
+        &>[c#{$prefix}="#{$i}"] {
+            grid-column: span $i;
+        }
+    }
+
+    &>[fdr#{$prefix}] {
+        flex-direction: row;
+    }
+
+    &>[fdc#{$prefix}] {
+        flex-direction: column;
+    }
+
+    @for $i from 0 through 10 {
+        &>[b#{$prefix}="#{$i}"] {
+            @if $i ==0 {
+                flex-basis: 100%;
+                flex-shrink: 1;
+            }
+
+            @else {
+                flex-basis: $i * 10%;
+                flex-shrink: 0;
+            }
+        }
+    }
+
+    @for $i from 1 through 8 {
+        &>[r#{$prefix}="#{$i}"] {
+            grid-row: span $i;
+            height: calc(((var(--chr-sizeh) * #{$i}) + (var(--gutter) * #{$i - 1})));
+        }
+    }
+
+    @for $i from 1 through 5 {
+        &>[rauto#{$prefix}="#{$i}"] {
+            grid-row: span $i;
+            height: $i * 20%;
+        }
+    }
+
+    @for $i from 1 through 12 {
+        &>[o#{$prefix}="#{$i}"] {
+            order: $i;
+        }
+    }
+}
+
+@mixin classmodel($prefix) {
+    // 1. Size, display and position
+    width: var(--#{$prefix}-w, auto);
+    max-width: var(--#{$prefix}-max-w, none);
+    min-width: var(--#{$prefix}-min-w, 0);
+    height: var(--#{$prefix}-h, auto);
+    max-height: var(--#{$prefix}-max-h, none);
+    min-height: var(--#{$prefix}-min-h, 0);
+    aspect-ratio: var(--#{$prefix}-ratio, auto); // Excelente para cards e mídias
+
+    // 2. Display & Flexbox
+    display: var(--#{$prefix}-dsp, revert);
+    flex-direction: var(--#{$prefix}-fd, row); // Padrão flex
+    flex-wrap: var(--#{$prefix}-fw, nowrap);
+    flex: var(--#{$prefix}-flex, 0 1 auto);
+    gap: var(--#{$prefix}-gap, normal); // Shorthand unificado de espaçamento
+    row-gap: var(--#{$prefix}-row-gap, var(--#{$prefix}-gap, normal));
+    column-gap: var(--#{$prefix}-col-gap, var(--#{$prefix}-gap, normal));
+    place-items: var(--#{$prefix}-pi, normal);
+    place-content: var(--#{$prefix}-pc, normal);
+    align-items: var(--#{$prefix}-ai, normal);
+    justify-content: var(--#{$prefix}-jc, normal);
+
+    // 3. Overflow & Scrolling
+    overflow: var(--#{$prefix}-over, visible);
+    overflow-x: var(--#{$prefix}-over-x, var(--#{$prefix}-over, visible));
+    overflow-y: var(--#{$prefix}-over-y, var(--#{$prefix}-over, visible));
+    overscroll-behavior: var(--#{$prefix}-overscroll, auto); // Evita escape de scroll em modais/cards
+
+    // 4. Spacing
+    padding: var(--#{$prefix}-pd, 0);
+    margin: var(--#{$prefix}-mg, 0);
+
+    // 5. Position & Transform
+    position: var(--#{$prefix}-pos, static);
+    top: var(--#{$prefix}-top, auto);
+    right: var(--#{$prefix}-right, auto);
+    bottom: var(--#{$prefix}-bottom, auto);
+    left: var(--#{$prefix}-left, auto);
+    transform: translate(var(--#{$prefix}-tx, 0), var(--#{$prefix}-ty, 0)) scale(var(--#{$prefix}-scale, 1));
+
+    // 6. Colors, Borders & Effects
+    background-color: var(--#{$prefix}-bg, transparent);
+    border-radius: var(--#{$prefix}-rd, 0);
+    box-shadow: var(--#{$prefix}-shadow, none);
+    opacity: var(--#{$prefix}-op, 1);
+    z-index: var(--#{$prefix}-z, auto);
+    cursor: var(--#{$prefix}-cursor, auto);
+    transition: var(--#{$prefix}-trs, all 0.2s ease); // Suaviza hover e interações
+
+    // 7. Grid Layout
+    grid-area: var(--#{$prefix}-ga, auto);
+    grid-template-rows: var(--#{$prefix}-grid-tr, none);
+    grid-template-columns: var(--#{$prefix}-grid-tc, none);
+    grid-template-areas: var(--#{$prefix}-grid-ta, none);
+
+    // 8. Border system
+    --_final-brd-clr-t: var(--#{$prefix}-brdt-clr, var(--#{$prefix}-brd-clr, transparent));
+    --_final-brd-clr-r: var(--#{$prefix}-brdr-clr, var(--#{$prefix}-brd-clr, transparent));
+    --_final-brd-clr-b: var(--#{$prefix}-brdb-clr, var(--#{$prefix}-brd-clr, transparent));
+    --_final-brd-clr-l: var(--#{$prefix}-brdl-clr, var(--#{$prefix}-brd-clr, transparent));
+
+    border-top: var(--#{$prefix}-brdt-sz, var(--brd-sz, 0)) var(--#{$prefix}-brdt-tp, solid) var(--_final-brd-clr-t);
+    border-right: var(--#{$prefix}-brdr-sz, var(--brd-sz, 0)) var(--#{$prefix}-brdr-tp, solid) var(--_final-brd-clr-r);
+    border-bottom: var(--#{$prefix}-brdb-sz, var(--brd-sz, 0)) var(--#{$prefix}-brdb-tp, solid) var(--_final-brd-clr-b);
+    border-left: var(--#{$prefix}-brdl-sz, var(--brd-sz, 0)) var(--#{$prefix}-brdl-tp, solid) var(--_final-brd-clr-l);
+
+    // 🧪 9. NOVIDADES CSS E EXPERIMENTAIS (Risco de Incompatibilidade)
+
+    // Container Queries (Layout responsivo baseado no elemento pai/componente)
+    container-type: var(--#{$prefix}-cq-type, normal);
+    container-name: var(--#{$prefix}-cq-name, none);
+
+    // CSS Anchor Positioning (Para popovers, menus e tooltips sem JavaScript)
+    position-anchor: var(--#{$prefix}-anchor, auto);
+    position-area: var(--#{$prefix}-pos-area, auto);
+
+    // Scrollbar Gutter (Elimina o "pulo" de layout quando barras de rolagem aparecem)
+    scrollbar-gutter: var(--#{$prefix}-scroll-g, auto);
+
+    // Field Sizing (Inputs e Textareas que crescem sozinhos sem JavaScript)
+    field-sizing: var(--#{$prefix}-fsz, fixed);
+
+    // View Transitions API (Animações de transição de estado nativas em SPAs)
+    view-transition-name: var(--#{$prefix}-vtn, none);
+
+    // 10. Hover & Active States
+    @media (pointer: fine) {
+        &:hover:not(.-disabled):not(.-active) {
+            width: var(--#{$prefix}-w-hvr, var(--#{$prefix}-w, auto));
+            height: var(--#{$prefix}-h-hvr, var(--#{$prefix}-h, auto));
+            padding: var(--#{$prefix}-pd-hvr, var(--#{$prefix}-pd, 0));
+            margin: var(--#{$prefix}-mg-hvr, var(--#{$prefix}-mg, 0));
+            opacity: var(--#{$prefix}-op-hvr, var(--#{$prefix}-op, 1));
+            background-color: var(--#{$prefix}-bg-hvr, var(--#{$prefix}-bg, transparent));
+            box-shadow: var(--#{$prefix}-shadow-hvr, var(--#{$prefix}-shadow, none));
+            transform: translate(var(--#{$prefix}-tx-hvr, var(--#{$prefix}-tx, 0)), var(--#{$prefix}-ty-hvr, var(--#{$prefix}-ty, 0))) scale(var(--#{$prefix}-scale-hvr, var(--#{$prefix}-scale, 1)));
+
+            --_final-brd-clr-t: var(--#{$prefix}-brdt-clr-hvr, var(--#{$prefix}-brd-clr-hvr, var(--#{$prefix}-brdt-clr, var(--#{$prefix}-brd-clr, transparent))));
+            --_final-brd-clr-r: var(--#{$prefix}-brdr-clr-hvr, var(--#{$prefix}-brd-clr-hvr, var(--#{$prefix}-brdr-clr, var(--#{$prefix}-brd-clr, transparent))));
+            --_final-brd-clr-b: var(--#{$prefix}-brdb-clr-hvr, var(--#{$prefix}-brd-clr-hvr, var(--#{$prefix}-brdb-clr, var(--#{$prefix}-brd-clr, transparent))));
+            --_final-brd-clr-l: var(--#{$prefix}-brdl-clr-hvr, var(--#{$prefix}-brd-clr-hvr, var(--#{$prefix}-brdl-clr, var(--#{$prefix}-brd-clr, transparent))));
+
+            &:active:not(.-disabled):not(.-active) {
+                background-color: var(--#{$prefix}-bg-actv, var(--#{$prefix}-bg-hvr, transparent));
+                opacity: var(--#{$prefix}-op-actv, var(--#{$prefix}-op-hvr, 1));
+                transform: translate(var(--#{$prefix}-tx-actv, var(--#{$prefix}-tx-hvr, 0)), var(--#{$prefix}-ty-actv, var(--#{$prefix}-ty-hvr, 0))) scale(var(--#{$prefix}-scale-actv, var(--#{$prefix}-scale-hvr, 1)));
+            }
+        }
+    }
+
+    @media (pointer: coarse) {
+        &:active:not(.-disabled):not(.-active) {
+            background-color: var(--#{$prefix}-bg-actv, var(--#{$prefix}-bg, transparent));
+            opacity: var(--#{$prefix}-op-actv, var(--#{$prefix}-op, 1));
+        }
+    }
+}

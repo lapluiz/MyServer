@@ -1,0 +1,23 @@
+Comandos para iniciar o servidor Node e o tunnel:
+
+Opção 1: Iniciar manualmente no terminal
+----------------------------------------
+1. Iniciar o servidor Node:
+node src/server/BCKND-script-app.js
+
+2. Iniciar o tunnel Cloudflared:
+.\cloudflared.exe tunnel run --url http://localhost:3000 myserver
+(ou apenas `cloudflared tunnel run --url http://localhost:3000 myserver` se estiver no PATH)
+
+
+Opção 2: Iniciar usando o PM2 (em segundo plano)
+----------------------------------------
+1. Iniciar o servidor Node:
+pm2 start src/server/BCKND-script-app.js --name "myserver"
+
+2. Iniciar o tunnel Cloudflared:
+pm2 start cloudflared --name "cloudflare-tunnel" -- tunnel run --url http://localhost:3000 myserver
+
+Salvar os processos do PM2:
+pm2 save
+

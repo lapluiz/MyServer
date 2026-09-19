@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color System Reactivity Tester</title>
+    <style>
+        /* 
+         * ==========================================
+         * CORE LOGIC: REACTIVE VARIABLES
+         * ==========================================
+         */
+        :root {
+            /* Primitives (Controlled by JS) */
+            --c01: #3498db;
+            --clr-theme: #666666;
+            --neutral-gray: #808080;
+            --chroma-factor: 1;
+            /* Multiplier for saturation of derived colors */
+
+            /* 
+               GENERATED SCALE (Reactive OKLCH Formula)
+               Dark: Multiplicative (l * factor) -> Deepens naturally
+               Light: Interpolative (l + (1-l) * factor) -> Washes out to white appropriately
+            */
+
+            /* C01 Scale */
+            --c01-bg: oklch(from var(--c01) calc(l + (1 - l) * 0.995) calc(c * var(--chroma-factor)) h);
+            --c01-ulgt: oklch(from var(--c01) calc(l + (1 - l) * 0.985) calc(c * var(--chroma-factor)) h);
+            --c01-slgt: oklch(from var(--c01) calc(l + (1 - l) * 0.80) calc(c * var(--chroma-factor)) h);
+            --c01-lgt: oklch(from var(--c01) calc(l + (1 - l) * 0.45) calc(c * var(--chroma-factor)) h);
+            --c01-base: oklch(from var(--c01) l calc(c * var(--chroma-factor)) h);
+            --c01-drk: oklch(from var(--c01) calc(l * 0.7) calc(c * var(--chroma-factor)) h);
+            --c01-sdrk: oklch(from var(--c01) calc(l * 0.4) calc(c * var(--chroma-factor)) h);
+            --c01-udrk: oklch(from var(--c01) calc(l * 0.2) calc(c * var(--chroma-factor)) h);
+
+            /* Theme Structural Grays (No Theme Tint) */
+            /* Derived PURELY from neutral-gray lightness/chroma/hue */
+            --clr-board-lgt: oklch(from var(--neutral-gray) 96% c h);
+            --clr-board: oklch(from var(--neutral-gray) 90% c h);
+            --clr-board-drk: oklch(from var(--neutral-gray) 13% c h);
+            /* Matches #121212 */
+
+            /* Gradients */
+            --grad-primary: linear-gradient(135deg, var(--c01-lgt), var(--c01-drk));
+
+            /* UI Defaults */
+            --font-main: system-ui, sans-serif;
+            --radius: 8px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            font-family: var(--font-main);
+            overflow: hidden;
+        }
+
+        /* 
+         * ==========================================
+         * SPLIT LAYOUT SIDES
+         * ==========================================
+         */
+        .pane {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            padding-bottom: 250px;
+            /* Space for bottom bar */
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* LIGHT MODE MAPPING */
+        .pane.light-mode {
+            background-color: var(--clr-board-lgt);
+            color: var(--c01-udrk);
+            --bg-card: white;
+            --bg-surface: var(--c01-ulgt);
+            --txt-primary: var(--c01-udrk);
+            --txt-secondary: var(--c01-drk);
+            --border-subtle: var(--c01-slgt);
+        }
+
+        /* DARK MODE MAPPING */
+        .pane.dark-mode {
+            background-color: var(--clr-board-drk);
+            color: var(--c01-ulgt);
+            --bg-card: var(--c01-udrk);
+            --bg-surface: var(--c01-sdrk);
+            --txt-primary: var(--c01-ulgt);
+            --txt-secondary: var(--c01-lgt);
+            --border-subtle: var(--c01-drk);
+        }
+
+        /* 
+         * ==========================================
+         * COMPONENTS
+         * ==========================================
+         */
+        h1,
+        h2,
+        h3 {
+            margin-top: 0;
+        }
+
+        .card {
+            background: var(--bg-card);
+            padding: 24px;
+            border-radius: var(--radius);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: var(--radius);
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            transition: transform 0.1s;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background-color: var(--c01-base);
+            color: white;
+        }
+
+        .btn-outline {
+            border: 2px solid var(--c01-base);
+            color: var(--txt-primary);
+            background: transparent;
+        }
+
+        .btn-ghost {
+            background: var(--bg-surface);
+            color: var(--txt-secondary);
+        }
+
+        .grid-colors {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .color-swatch {
+            height: 60px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: rgba(0, 0, 0, 0.5);
+            font-weight: bold;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        /* 
+         * ==========================================
+         * CONTROL BAR (Fixed Bottom)
+         * ==========================================
+         */
+        .control-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 100;
+            height: 250px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .control-bar.collapsed {
+            transform: translateY(250px);
+        }
+
+        .collapse-tab {
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 40px;
+            background: white;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
+            font-weight: bold;
+            color: #333;
+            font-size: 12px;
+            user-select: none;
+        }
+
+        .bar-content {
+            display: flex;
+            height: 100%;
+        }
+
+        .bar-side {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .bar-side.left {
+            background: #f9f9f9;
+            border-right: 1px solid #eee;
+        }
+
+        .bar-side.right {
+            background: #1a1a1a;
+            color: white;
+        }
+
+        .controls-center {
+            width: 300px;
+            padding: 20px;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            border-right: 1px solid #eee;
+            border-left: 1px solid #eee;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        input[type="color"] {
+            border: none;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            background: none;
+        }
+
+        .neutral-squares {
+            display: flex;
+            gap: 5px;
+            margin-top: 5px;
+        }
+
+        .square {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        .scale-display {
+            display: flex;
+            width: 100%;
+            height: 40px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .scale-item {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- LEFT PANE (LIGHT) -->
+    <div class="pane light-mode">
+        <h2>Light Mode</h2>
+        <p>Preview of elements in standard structural lighting.</p>
+
+        <div class="card">
+            <h3>Card Component</h3>
+            <p>This is a surface element using <code>--bg-card</code>.</p>
+            <div style="margin-top: 15px;">
+                <button class="btn btn-primary">Primary</button>
+                <button class="btn btn-outline">Outline</button>
+                <button class="btn btn-ghost">Ghost</button>
+            </div>
+        </div>
+
+        <div class="card" style="background: var(--bg-surface); border: none;">
+            <h3>Input Surface</h3>
+            <p>Using <code>--bg-surface</code> (Ultra Light / Tinted).</p>
+            <input type="text" value="Text Input"
+                style="padding: 10px; border-radius: 6px; border: 1px solid var(--border-subtle); width: 100%;">
+        </div>
+
+        <h3>Typography & Scale</h3>
+        <p style="color: var(--txt-secondary)">Secondary text color demonstration.</p>
+
+        <div
+            style="height: 100px; border-radius: 12px; background: var(--grad-primary); display: flex; align-items: center; justify-content: center; color: white;">
+            Gradient Primary
+        </div>
+    </div>
+
+    <!-- RIGHT PANE (DARK) -->
+    <div class="pane dark-mode">
+        <h2>Dark Mode</h2>
+        <p>Preview of elements in inverted structural lighting.</p>
+
+        <div class="card">
+            <h3>Card Component</h3>
+            <p>This is a surface element using <code>--bg-card</code>.</p>
+            <div style="margin-top: 15px;">
+                <button class="btn btn-primary">Primary</button>
+                <button class="btn btn-outline">Outline</button>
+                <button class="btn btn-ghost">Ghost</button>
+            </div>
+        </div>
+
+        <div class="card" style="background: var(--bg-surface); border: none;">
+            <h3>Input Surface</h3>
+            <p>Using <code>--bg-surface</code> (Super Dark / Tinted).</p>
+            <input type="text" value="Text Input"
+                style="padding: 10px; border-radius: 6px; border: 1px solid var(--border-subtle); width: 100%; background: rgba(0,0,0,0.2); color: white;">
+        </div>
+
+        <h3>Typography & Scale</h3>
+        <p style="color: var(--txt-secondary)">Secondary text color demonstration.</p>
+
+        <div
+            style="height: 100px; border-radius: 12px; background: var(--grad-primary); display: flex; align-items: center; justify-content: center; color: white;">
+            Gradient Primary
+        </div>
+    </div>
+
+    <!-- CONTROL BAR -->
+    <div class="control-bar" id="controlBar">
+        <div class="collapse-tab" onclick="toggleBar()">
+            Color Lab
+        </div>
+
+        <div class="bar-content">
+            <!-- Left Scale Display -->
+            <div class="bar-side left">
+                <h4>Generated Scale (Reactive)</h4>
+                <div class="grid-colors" style="margin-top: 0;">
+                    <div class="color-swatch" style="background: var(--c01-bg)">bg</div>
+                    <div class="color-swatch" style="background: var(--c01-ulgt)">ulgt</div>
+                    <div class="color-swatch" style="background: var(--c01-slgt)">slgt</div>
+                    <div class="color-swatch" style="background: var(--c01-lgt)">lgt</div>
+                    <div class="color-swatch" style="background: var(--c01-base); color: white;">base</div>
+                    <div class="color-swatch" style="background: var(--c01-drk); color: white;">drk</div>
+                    <div class="color-swatch" style="background: var(--c01-sdrk); color: white;">sdrk</div>
+                    <div class="color-swatch" style="background: var(--c01-udrk); color: white;">udrk</div>
+                </div>
+            </div>
+
+            <!-- Center Controls -->
+            <div class="controls-center">
+                <!-- <h3>Controls</h3> -->
+
+                <div class="control-group">
+                    <label>--c01 (Primary)</label>
+                    <input type="color" id="pickerC01" value="#3498db" oninput="updateColor('--c01', this.value)">
+                </div>
+
+                <div class="control-group" style="opacity: 0.5;">
+                    <label>--clr-theme (Disabled)</label>
+                    <input type="color" id="pickerTheme" value="#666666" disabled>
+                </div>
+
+                <div class="control-group">
+                    <label>Neutral</label>
+                    <div class="neutral-squares">
+                        <div class="square" style="background: #e0e0e0; cursor: pointer;"
+                            onclick="updateColor('--neutral-gray', '#e0e0e0')"></div>
+                        <div class="square" style="background: #808080; cursor: pointer;"
+                            onclick="updateColor('--neutral-gray', '#808080')"></div>
+                        <div class="square" style="background: #333333; cursor: pointer;"
+                            onclick="updateColor('--neutral-gray', '#333333')"></div>
+                        <div class="square" style="background: #aab6bd; cursor: pointer;"
+                            onclick="updateColor('--neutral-gray', '#aab6bd')"></div>
+                    </div>
+                </div>
+
+                <div class="control-group" style="flex-direction: column; align-items: flex-start;">
+                    <label>Chroma Factor (Saturação: <span id="chromaVal">1.0</span>)</label>
+                    <input type="range" id="chromaSlider" min="0" max="2" step="0.1" value="1" style="width: 100%;"
+                        oninput="updateChroma(this.value)">
+                </div>
+            </div>
+
+            <!-- Right Scale Display (Same, but on dark bg context) -->
+            <div class="bar-side right">
+                <h4>Dark Context Scale</h4>
+                <div class="grid-colors" style="margin-top: 0;">
+                    <div class="color-swatch" style="background: var(--c01-bg); color:#333">bg</div>
+                    <div class="color-swatch" style="background: var(--c01-ulgt); color:#333">ulgt</div>
+                    <div class="color-swatch" style="background: var(--c01-slgt); color:#333">slgt</div>
+                    <div class="color-swatch" style="background: var(--c01-lgt); color: #333">lgt</div>
+                    <div class="color-swatch" style="background: var(--c01-base); color: white;">base</div>
+                    <div class="color-swatch" style="background: var(--c01-drk); color: white;">drk</div>
+                    <div class="color-swatch" style="background: var(--c01-sdrk); color: white;">sdrk</div>
+                    <div class="color-swatch" style="background: var(--c01-udrk); color: white;">udrk</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const root = document.documentElement;
+        const bar = document.getElementById('controlBar');
+
+        function updateColor(variable, value) {
+            root.style.setProperty(variable, value);
+        }
+
+        function updateChroma(value) {
+            root.style.setProperty('--chroma-factor', value);
+            document.getElementById('chromaVal').textContent = value;
+        }
+
+        function toggleBar() {
+            bar.classList.toggle('collapsed');
+        }
+
+        // Initialize from computed styles to match pickers if needed
+        // (Optional refinement)
+    </script>
+</body>
+
+</html>

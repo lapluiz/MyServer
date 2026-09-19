@@ -1,0 +1,21 @@
+{
+    "userid": "string",
+    "config": {
+        "url": "string",
+        "description": "string",
+        "logocomplete": "string",
+        "logoicon": "string"
+    },
+    "appearance": {
+        "thememode": "string",
+        "themecolor": "string",
+        "themeintensivity": "string",
+        "themebrightness": "string",
+        "themelayout": "string",
+        "thememenumob": "string"
+    },
+    "colors": {
+        "colorprimary": "string",
+        "colorsecondary": "string"
+    }
+}

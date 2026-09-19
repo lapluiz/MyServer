@@ -1,0 +1,648 @@
+@use '../settings' as *;
+
+.Gcollapse {
+    //Size, display and position
+    @include transition;
+    @include classmodel('collapse');
+
+    --collapse-flexd: column;
+
+    .Gcollapse-content {
+        @include classmodel('collapsecont');
+    }
+
+    &[vrtn] {
+        --subcard-w: calc(100% - (var(--gutter) * 2));
+        --subcard-mg: 0 var(--gutter);
+        --subcard-pd: var(--gutter) 0;
+        //--subcard-clrbg: var(--clr-card);
+        --subcard-rad: var(--radsys-s2);
+        --cte-mg: 0 var(--gutter);
+
+
+        .GcardTitle {
+            @include transition;
+            --cte-dsp: grid;
+            --cte-grid-tr: 2.4rem 2rem;
+            --cte-grid-tc: 2.4rem auto;
+            --cte-grid-ta: "eli elh3" "elp elp";
+            --cte-gaph: var(--gutter-s2);
+            --cte-clrbg: var(--clr-board);
+            --cte-mg: 0;
+            --cte-pd: var(--gutter-s2);
+
+            --icon-w: 2.rem;
+            --icon-h: 4rem;
+            --icon-ga: eli;
+            --icon-dsp: flex;
+            --icon-pli: flex-start;
+            --svg-w: 2.4rem;
+            --svg-h: 2.4rem;
+            --h3-ga: elh3;
+            --h3-fsz: var(--font-h4);
+            --h3-fwgt: 600;
+            --p-ga: elp;
+            --p-fsz: var(--font-h6);
+            --p-mg: 0 0 0 0.2rem;
+
+            h3,
+            h6 {
+                white-space: nowrap;
+            }
+
+            input {
+                display: none;
+            }
+        }
+    }
+
+    &[mcomp*="config"] {
+        transition: all 0.4s ease-in-out;
+        --collapse-h: auto;
+        --collapse-max-h: 200svh;
+        --collapse-rad: var(--radsys-s2);
+        //--collapse-gapv: var(--gutter);
+        --collapse-clrbg: var(--clr-card);
+        --collapse-over: hidden;
+
+        .Gtitle {
+            transition: all 0.2s ease-out;
+            --title-w: auto;
+            --title-h: var(--sz-wh-ex2);
+            --title-rad: var(--radsys-s2);
+            --title-mg: 0 var(--gutter);
+            --title-dsp: flex;
+            --title-algi: center;
+            --title-clrbg: var(--clr-board-lgt);
+            --title-flex: 0 0 auto;
+            --title-mg: var(--gutter) var(--gutter) 0 var(--gutter);
+
+            --titlecont-w: calc(100% - (var(--gutter-s2) * 2));
+            --titlecont-h: fit-content;
+            --titlecont-flex: 0 1 auto;
+            --titlecont-dsp: grid;
+            --titlecont-mg: 0 auto;
+            --titlecont-grid-ta: "elicon elh4" "elicon elp";
+            --titlecont-grid-tc: var(--sz-wh-l2) 1fr;
+            --titlecont-grid-tr: min-content min-content;
+            --titlecont-algi: center;
+            --titlecont-gaph: var(--gutter-s2);
+            --titlecont-over: hidden;
+
+            --icon-w: var(--sz-wh-l2);
+            --icon-h: var(--sz-wh-l2);
+            --icon-algi: center;
+            --icon-jstc: center;
+            --icon-ga: elicon;
+            --svg-w: var(--sz-wh-l2);
+            --svg-h: var(--sz-wh-l2);
+            --svg-clri: var(--clr-01-sdrk);
+
+            --h4-ga: elh4;
+            --h4-fwgt: 600;
+            --h4-fclr: var(--clr-01-sdrk);
+
+            --p-fclr: var(--clr-txt);
+            --p-fsz: var(--font-caption);
+            --p-ga: elp;
+            --p-wsp: nowrap;
+            --p-tover: ellipsis;
+            --p-over: hidden;
+            --card-pg: 0 var(--gutter-s2);
+            --card-clrbg: var(--clr-board-lgt);
+        }
+
+        .Gcollapse-content {
+            transition: all 0.3s ease-in-out;
+            --collapsecont-w: 100%;
+            --collapsecont-h: fit-content;
+            --collapsecont-dsp: flex;
+            --collapsecont-flexd: column;
+            //--collapsecont-mg: 0 auto;
+            --collapsecont-opct: 1;
+            // --collapsecont-gaph: var(--gutter);
+            // --collapsecont-gapv: calc(var(--gutter) * 2);
+            --collapsecont-pd: calc(var(--gutter) + var(--gutter-s1)) var(--gutter);
+            --gridgaph: calc(var(--gutter) * 2);
+            --gridgapv: calc(var(--gutter) * 2);
+
+            @container (#{$max-md}) {
+                --gridgaph: var(--gutter-s2);
+            }
+
+            .Glinecard {
+                --linecard-w: 100%;
+                --linecard-h: fit-content;
+                //--linecard-over: hidden;
+                --gridgaph: var(--gutter-s2);
+                --gridgapv: var(--gutter-s1);
+
+                [el="icon"] {
+                    --svg-clri: var(--clr-sys);
+                }
+
+                [el="title"] {
+                    --h4-lhgt: var(--sz-wh);
+                    --h4-fwgt: 600;
+                    --h4-fclr: var(--clr-txt);
+                }
+
+                [el="text"] {
+                    --p-fsz: var(--font-caption);
+                    --p-fff: var(--font-base);
+                    --p-fclr: var(--clr-txt-low);
+                }
+
+                [el="group"] {
+                    --mincard-gaph: var(--gutter-s2);
+                    --mincard-dsp: flex;
+                    --mincard-flexd: column;
+                    --mincard-flexw: nowrap;
+                }
+
+                &:not(:last-child) {
+                    &::after {
+                        content: '';
+                        --after-w: 100%;
+                        --after-h: 1px;
+                        --after-pos: absolute;
+                        --after-bot: calc(var(--gutter)* -1);
+                        border-bottom: 1px var(--clr-board) solid;
+                    }
+                }
+            }
+
+            &:last-child {
+                //--collapsecont-mg: var(--gutter) auto;
+            }
+
+            &:not(:last-child) {
+                --collapsecont-brdb-clr: var(--clr-board);
+                --collapsecont-brdb-sz: 1px;
+            }
+        }
+
+        &.-toggled {
+            --collapse-h: var(--sz-wh-ex2);
+            --collapse-max-h: var(--sz-wh-ex2);
+            --collapse-gapv: 0;
+
+            .Gtitle {
+                --title-mg: 0rem;
+                --title-clrbg: var(--clr-card);
+                --title-clrbg-hvr: var(--clr-board-lgt);
+                --svg-clri: var(--clr-01-drk);
+                --h4-fclr: var(--clr-01-sdrk);
+            }
+
+            .Gcollapse-content {
+                --collapsecont-h: 0rem;
+                --collapsecont-opct: 0;
+
+                &:last-child {
+                    --collapsecont-mg: 0 auto;
+                }
+
+                &:not(:last-child) {
+                    --collapsecont-pd: 0;
+                    border: none;
+                }
+            }
+        }
+    }
+
+    &[mcomp*="bundle"] {
+        transition: all 0.4s ease-in-out;
+        --collapse-h: auto;
+        --collapse-max-h: 200svh;
+        --collapse-rad: var(--radsys-s2);
+        //--collapse-gapv: var(--gutter);
+        --collapse-clrbg: var(--clr-card);
+        --collapse-over: hidden;
+
+        .Gtitle {
+            transition: all 0.2s ease-out;
+            --title-w: auto;
+            --title-h: var(--sz-wh-ex2);
+            --title-rad: var(--radsys-s2);
+            --title-mg: 0 var(--gutter);
+            --title-dsp: flex;
+            --title-algi: center;
+            --title-clrbg: var(--clr-board-lgt);
+            --title-flex: 0 0 auto;
+            --title-mg: var(--gutter) var(--gutter) 0 var(--gutter);
+
+            --titlecont-w: calc(100% - (var(--gutter-s2) * 2));
+            --titlecont-h: fit-content;
+            --titlecont-flex: 0 1 auto;
+            --titlecont-dsp: grid;
+            --titlecont-mg: 0 auto;
+            --titlecont-grid-ta: "elicon elh4" "elicon elp";
+            --titlecont-grid-tc: var(--sz-wh-l2) 1fr;
+            --titlecont-grid-tr: min-content min-content;
+            --titlecont-algi: center;
+            --titlecont-gaph: var(--gutter-s2);
+            --titlecont-over: hidden;
+
+            --icon-w: var(--sz-wh-l2);
+            --icon-h: var(--sz-wh-l2);
+            --icon-algi: center;
+            --icon-jstc: center;
+            --icon-ga: elicon;
+            --svg-w: var(--sz-wh-l2);
+            --svg-h: var(--sz-wh-l2);
+            --svg-clri: var(--clr-01-sdrk);
+
+            --h4-ga: elh4;
+            --h4-fwgt: 600;
+            --h4-fclr: var(--clr-01-sdrk);
+
+            --p-fclr: var(--clr-txt);
+            --p-fsz: var(--font-caption);
+            --p-ga: elp;
+            --p-wsp: nowrap;
+            --p-tover: ellipsis;
+            --p-over: hidden;
+            --card-pg: 0 var(--gutter-s2);
+            --card-clrbg: var(--clr-board-lgt);
+        }
+
+        .Gcollapse-content {
+            transition: all 0.3s ease-in-out;
+            --collapsecont-w: 100%;
+            --collapsecont-h: fit-content;
+            --collapsecont-dsp: flex;
+            --collapsecont-flexd: column;
+            //--collapsecont-mg: 0 auto;
+            --collapsecont-opct: 1;
+            --collapsecont-gaph: var(--gutter);
+            --collapsecont-gapv: var(--gutter);
+            --collapsecont-pd: calc(var(--gutter) + var(--gutter-s1)) var(--gutter);
+
+            &:not(:has(component-form)) {
+                .Glinecard {
+                    --linecard-w: 100%;
+                    --linecard-h: fit-content;
+                    --linecard-over: hidden;
+                    --linecard-gaph: var(--gutter-s2);
+                    --linecard-gapv: var(--gutter-s1);
+                    --linecard-dsp: grid;
+                    --linecard-over: hidden;
+                    --linecard-grid-ta: "elicon eltitle ellabel" "eltext eltext ellabel" "elcode elcode elcode";
+                    --linecard-grid-tc: var(--sz-wh) 1fr min-content;
+                    --linecard-grid-tr: var(--sz-wh) auto auto;
+
+                    [el="icon"] {
+                        grid-area: elicon;
+                        --svg-clri: var(--clr-sys);
+                    }
+
+                    [el="title"] {
+                        grid-area: eltitle;
+                        --h4-lhgt: var(--sz-wh);
+                        --h4-fwgt: 600;
+                        --h4-fclr: var(--clr-txt);
+                    }
+
+                    [el="text"] {
+                        grid-area: eltext;
+                        --p-fsz: var(--font-caption);
+                        --p-fff: var(--font-base);
+                        --p-fclr: var(--clr-txt-low);
+                        --p-pd: 0 0 0 var(--gutter-s1);
+                    }
+
+                    &:not(:has([el="grid"])) {
+                        [el*="label"] {
+                            grid-area: ellabel;
+                            --label-w: fit-content;
+                            --label-h: fit-content;
+                        }
+                    }
+
+                    [el="group"] {
+                        grid-area: ellabel;
+                        --mincard-gaph: var(--gutter-s2);
+                        --mincard-dsp: flex;
+                        --mincard-flexw: nowrap;
+                    }
+
+                    [el="code"] {
+                        grid-area: elcode;
+                        --mincard-gaph: var(--gutter-s2);
+                        --mincard-dsp: flex;
+                        --mincard-flexd: column;
+                        --mincard-pd: 0;
+                        --mincard-rad: var(--radsys-s2);
+                        --mincard-mg: var(--gutter-s2) 0 var(--gutter) 0;
+                        --mincard-clrbg: transparent;
+
+                        [el="codetitle"] {
+                            --s-dsp: flex;
+                            --s-algi: center;
+                            --s-gaph: var(--gutter-s2);
+                            --h5-fclr: var(--clr-txt-dsb);
+                            --h5-fclr-hvr: var(--clr-01-drk);
+                            --h5-fwgt: 600;
+
+                            svg {
+                                --svg-clri: var(--clr-sys-dsb);
+                                --svg-clri-hvr: var(--clr-01-drk);
+                            }
+                        }
+
+                        pre {
+                            display: none;
+
+                            code {
+                                color: var(--clr-whitefix);
+                                font-family: 'Consolas', 'Monaco', 'Lucida Console', 'Courier New', monospace;
+                                font-size: 14px;
+                            }
+                        }
+
+                        &.-active {
+                            --mincard-pd: var(--gutter);
+                            --mincard-clrbg: color-mix(in srgb, var(--clr-01-sdrk) 20%, black);
+
+                            [el="codetitle"] {
+                                --h5-fclr: var(--clr-whitefix);
+
+                                svg {
+                                    --svg-clri: var(--clr-whitefix);
+                                }
+                            }
+
+                            pre {
+                                display: block;
+                            }
+                        }
+                    }
+
+                    @include media-max(md) {
+                        --linecard-grid-ta: "elicon eltitle" "eltext eltext" "ellabel ellabel" "elcode elcode";
+                        --linecard-grid-tc: var(--sz-wh) 1fr;
+                        --linecard-grid-tr: var(--sz-wh) min-content min-content auto;
+                        --linecard-gaph: var(--gutter-s2);
+                        --linecard-gapv: var(--gutter-s2);
+
+                        [el*="label"] {
+                            --label-w: 100%;
+                        }
+                    }
+
+                    &:not(:last-child) {
+                        --linecard-brdb-clr: var(--clr-board);
+                        --linecard-brdb-sz: 1px;
+                    }
+                }
+            }
+
+        }
+
+        &.-toggled {
+            --collapse-h: var(--sz-wh-ex2);
+            --collapse-max-h: var(--sz-wh-ex2);
+            --collapse-gapv: 0;
+
+            .Gtitle {
+                --title-mg: 0rem;
+                --title-clrbg: var(--clr-card);
+                --title-clrbg-hvr: var(--clr-board-lgt);
+                --svg-clri: var(--clr-01-drk);
+                --h4-fclr: var(--clr-01-sdrk);
+            }
+
+            .Gcollapse-content {
+                --collapsecont-h: 0rem;
+                --collapsecont-opct: 0;
+
+                &:last-child {
+                    --collapsecont-mg: 0 auto;
+                }
+
+                &:not(:last-child) {
+                    --collapsecont-pd: 0;
+                    border: none;
+                }
+            }
+        }
+    }
+
+    &[mcomp*="collapse"] {
+        @include transition;
+        --collapse-w: auto;
+        --collapse-h: auto;
+        --collapse-mix-h: var(--title-h);
+        --collapse-dsp: flex;
+        --collapse-flex: 0 0 auto;
+        --collapse-flexd: column;
+        --collapse-over-y: hidden;
+        --collapse-clrbg: var(--clr-card);
+        --collapse-rad: var(--radsys);
+        --collapse-gapv: var(--brd-sz);
+        --title-w: auto;
+        --title-h: 5rem;
+        --title-pd: var(--gutter-s2);
+        --title-mg: 0;
+        --title-clrbg: var(--clr-board);
+        --title-dsp: flex;
+        --title-flex: 0 0 auto;
+        --title-algi: center;
+        --title-gaph: var(--gutter-s2);
+        --title-gapv: var(--gutter-s2);
+        --titlecont-w: 100%;
+        --titlecont-h: 100%;
+        --titlecont-dsp: flex;
+        --titlecont-algi: center;
+        --titlecont-gaph: var(--gutter-s2);
+
+        //--subcard-pd: var(--gutter);
+        --img-w: 8rem;
+        --img-h: auto;
+        --img-objf: content;
+
+        --p-fsz: var(--font-caption);
+
+
+        .Gtitle {
+            // --h3-fclr: var(--font-txt);
+            // --h3-wsp: nowrap;
+            // --h3-over: hidden;
+            // --h3-tover: ellipsis;
+        }
+
+        &.-toggled {
+            --collapse-h: 5rem;
+            --collapse-clrbg: var(--clr-card);
+            --title-clrbg: var(--clr-board);
+            --title-mg: 0;
+        }
+
+        &:has(.Gtitle ._MInpt .inputGroup ._It input:checked) {
+            --title-clrbg: var(--clr-board);
+            --title-clrbg: var(--clr-01-bg);
+            --h4-fclr: var(--clr-01-udrk);
+        }
+
+        &:has(.Gtitle ._MInpt .inputGroup ._It input:checked):not(.-toggled) {
+            --collapse-h: auto;
+        }
+
+        // &:has(.Gtitle ._MInpt .inputGroup ._It input:not(:checked)){
+        //     &:not(.-toggled) {
+        //         --collapse-h: 5rem;
+        //     }
+        //     &.-toggled {
+        //         --collapse-h: auto;
+        //     }
+        // }
+
+        .inputInfo {
+            width: calc(100% - (var(--gutter) * 2));
+            margin: var(--gutter);
+        }
+
+        &[mcomp*="-sub"] {
+            --collapse-w: 100%;
+            --collapse-clrbg: var(--clr-board-lgt);
+            --title-clrbg: var(--clr-board-lgt);
+            --h4-fclr: var(--clr-txt-low);
+            margin-bottom: var(--brd-sz);
+
+
+            &.-toggled {
+                --collapse-clrbg: var(--clr-board-lgt);
+                --title-clrbg: var(--clr-board-lgt);
+            }
+
+            &:has(.Gtitle ._MInpt .inputGroup ._It input:checked) {
+                --collapse-h: auto;
+                --collapse-clrbg: var(--clr-board-lgt);
+                --title-clrbg: var(--clr-01-bg);
+                --h4-fclr: var(--clr-01-udrk);
+
+                .Gsubcard {
+                    pointer-events: auto;
+                    filter: grayscale(0);
+                    opacity: 1;
+                }
+            }
+
+            &:has(.Gtitle ._MInpt .inputGroup ._It input:not(checked)) {
+                .Gsubcard {
+                    pointer-events: none;
+                    filter: grayscale(1);
+                    opacity: 0.6;
+                }
+            }
+
+            &:first-child {
+                margin-top: var(--gutter);
+            }
+
+            &:last-child {
+                margin-bottom: var(--gutter);
+            }
+        }
+
+        &[mcomp*="-in"] {
+            --collapse-w: calc(100% - (var(--gutter) * 2));
+            --collapse-mg: 0 var(--gutter);
+            margin-left: var(--gutter);
+            margin-right: var(--gutter);
+            margin-bottom: var(--gutter-s2);
+
+            &:first-child {
+                margin-top: var(--gutter);
+            }
+
+            &:last-child {
+                margin-bottom: var(--gutter);
+            }
+        }
+
+        &[mcomp*="-content"] {
+            --p-fsz: var(--font-text);
+        }
+
+        &[mcomp*="-config"] {
+            --collapse-gapv: var(--gutter);
+            --title-h: var(--sz-wh-ex2);
+            --title-rad: var(--radsys-s2);
+            --title-clrbg: var(--clr-01-bg);
+            --titlecont-w: 100%;
+            --titlecont-h: 100%;
+            --titlecont-flex: 0 1 auto;
+            --titlecont-dsp: grid;
+            --titlecont-grid-ta: "elicon elh4" "elicon elp";
+            --titlecont-grid-tc: var(--sz-wh-l1) 1fr;
+            --titlecont-grid-tr: min-content min-content;
+            --titlecont-algi: center;
+            --titlecont-gaph: var(--gutter-s1);
+            --titlecont-over: hidden;
+            --icon-w: var(--sz-wh-l1);
+            --icon-h: var(--sz-wh-l1);
+            --icon-algi: center;
+            --icon-jstc: center;
+            --icon-ga: elicon;
+            --svg-w: var(--sz-wh-l2);
+            --svg-h: var(--sz-wh-l2);
+            --p-fclr: var(--clr-txt-low);
+            --p-ga: elp;
+
+            --card-pg: 0 var(--gutter-s2);
+            --card-clrbg: var(--clr-board-lgt);
+
+            --h4-ga: elh4;
+            --h4-fwgt: 600;
+            --h4-fclr: var(--clr-01-sdrk);
+
+            &>:last-child {
+                margin-bottom: var(--gutter);
+            }
+
+            &.-toggled {
+                --collapse-h: var(--sz-wh-ex2);
+                --collapse-clrbg: var(--clr-card);
+                --title-brdb-clr: transparent;
+                --title-pd: var(--gutter-s2);
+                --title-clrbg: var(--clr-card);
+            }
+        }
+
+
+        &[vrtn="plustoggle"] {
+            .Gtitle {
+                .Gtitle-content {
+                    i {
+                        &::after {
+                            -webkit-mask: url(/admin/assets/icons/icon-GEN-ui-plus.svg) no-repeat 50% 50%;
+                            mask: url(/admin/assets/icons/icon-GEN-ui-plus.svg) no-repeat 50% 50%;
+                            -webkit-mask-size: 100%;
+                            mask-size: 100%;
+                            --after-clrbg: var(--clr-sys-low);
+                        }
+                    }
+                }
+            }
+
+            &:not(.-toggled) {
+                .Gtitle {
+                    .Gtitle-content {
+                        i {
+                            &::after {
+                                -webkit-mask: url(/admin/assets/icons/icon-GEN-ui-minus.svg) no-repeat 50% 50%;
+                                mask: url(/admin/assets/icons/icon-GEN-ui-minus.svg) no-repeat 50% 50%;
+                                -webkit-mask-size: 100%;
+                                mask-size: 100%;
+                                --after-clrbg: var(--clr-sys-low);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+}

@@ -1,0 +1,150 @@
+:root {
+    /* ==========================================================================
+     Global Settings
+     ========================================================================== */
+    --main-size: 10px;
+    --w-out: 100%;
+    --w-in: 1440px;
+
+    /* Font Families */
+    --font-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-face: "Google Sans", "Opensans", Roboto, Arial, sans-serif;
+    font-size: var(--main-size);
+
+    /* Scrollbar Dimensions */
+    --scrollD: 0.6rem;
+    --scrollM: 0.2rem;
+
+    /* ==========================================================================
+     Typography Scale (Middle-Out)
+     ========================================================================== */
+    /* Display / Hero */
+    --font-ex0: 9.6rem;
+    --font-ex2: 6.0rem;
+    --font-ex1: 4.8rem;
+
+    /* Headings */
+    --font-h1: 3.2rem;
+    --font-h2: 2.4rem;
+    --font-h3: 2.0rem;
+    --font-h4: 1.8rem;
+    --font-h5: 1.6rem;
+    --font-h6: 1.4rem;
+
+    /* Body / UI */
+    --font-text: 1.6rem;
+    /* Standard Body */
+    --font-btn1: 1.6rem;
+    /* Primary Button */
+    --font-btn2: 1.4rem;
+    /* Secondary Button */
+    --font-caption: 1.2rem;
+    /* Captions */
+
+    /* Utilities */
+    --font-s1: 1.1rem;
+    /* Helper */
+    --font-s2: 1.0rem;
+    /* Badge */
+    --font-s3: 0.9rem;
+    /* Micro */
+
+    /* ==========================================================================
+     Spacing / Gutters (Middle-Out)
+     1rem = 10px (via html 62.5%)
+     ========================================================================== */
+    --gutter-l2: 8.0rem;
+    /* 80px */
+    --gutter-l1: 4.0rem;
+    /* 40px */
+    --gutter: 2.0rem;
+    /* 20px (Base) */
+    --gutter-s1: 1.0rem;
+    /* 10px */
+    --gutter-s2: 0.5rem;
+    /* 5px */
+
+
+    // Sizes
+    --sz-wh-ex0: 80px;
+    --sz-wh-ex1: 70px;
+    --sz-wh-ex2: 60px;
+    --sz-wh-l0: 50px;
+    --sz-wh-l1: 40px;
+    --sz-wh-l2: 32px;
+    --sz-wh: 24px;
+    --sz-wh-s2: 20px;
+    --sz-wh-s1: 16px;
+    --sz-wh-s0: 9px;
+
+    /* ==========================================================================
+     Border Radius (Calculated)
+     Base: --radcalc
+     ========================================================================== */
+    --radcalc: 2rem;
+
+    --radsys-l3: calc(var(--radcalc) * 2);
+    /* ~40px */
+    --radsys-l2: calc(var(--radcalc) * 1);
+    /* 20px */
+    --radsys-l1: calc(var(--radcalc) * 0.7);
+    /* 14px */
+    --radsys: calc(var(--radcalc) * 0.5);
+    /* 10px (Base) */
+    --radsys-s1: calc(var(--radcalc) * 0.33);
+    /* ~6.6px */
+    --radsys-s2: calc(var(--radcalc) * 0.26);
+    /* ~5.2px */
+    --radsys-s3: calc(var(--radcalc) * 0.13);
+    /* ~2.6px */
+    --radsys-pill: 100vw;
+
+    /* ==========================================================================
+     Shadows (Filter)
+     ========================================================================== */
+    --shadow-l1: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.1));
+    --shadow: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+    /* Base */
+    --shadow-s1: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.05));
+
+    /* ==========================================================================
+     Transitions (Middle-Out)
+     Prefix: --tsn
+     ========================================================================== */
+    --tsn-l2: 800ms;
+    --tsn-l1: 500ms;
+    --tsn: 300ms;
+    /* Base */
+    --tsn-s1: 200ms;
+    --tsn-s2: 100ms;
+
+    /* ==========================================================================
+     Avatar Sizes
+     ========================================================================== */
+    --avt-sz-l2: 9.6rem;
+    --avt-sz-l1: 6.4rem;
+    --avt-sz: 4.0rem;
+    /* Base */
+    --avt-sz-s1: 3.2rem;
+    --avt-sz-s2: 2.4rem;
+
+    /* ==========================================================================
+     Thumb Sizes
+     ========================================================================== */
+    --thumb-l2: 32.0rem;
+    --thumb-l1: 24.0rem;
+    --thumb: 12.0rem;
+    /* Base */
+    --thumb-s1: 8.0rem;
+    --thumb-s2: 4.8rem;
+
+    /* ==========================================================================
+     Breakpoints (Standard Widths)
+     ========================================================================== */
+    --xs: 480px;
+    --sm: 640px;
+    --md: 768px;
+    --lg: 1024px;
+    --xl: 1280px;
+    --2xl: 1536px;
+}
