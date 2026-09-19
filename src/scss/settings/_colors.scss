@@ -1,0 +1,260 @@
+@use "sass:list";
+@use "sass:meta";
+
+/* 
+ * ==========================================
+ * UNIFIED COLOR SYSTEM
+ * ==========================================
+ * Supports:
+ * - OKLCH & Color-Mix Palettes (via attributes)
+ * - Light, Dark, & Auto Modes
+ * - Scalable Colors (Primitives -> Derived Scales)
+ * - Fixed Colors (One-time definitions)
+ */
+
+:root {
+    /* 
+     * 1. PRIMITIVES 
+     * User-defined base colors.
+     */
+    --clr-01: #27ae60;
+    /* Primary */
+    --clr-02: #e74c3c;
+    /* Secondary */
+    --clr-slct: #2980b9;
+    /* Selection */
+
+    --semantic-success: #2ecc71;
+    --semantic-danger: #e74c3c;
+    --semantic-info: #3e66fb;
+    --semantic-warning: #f3bd1c;
+
+    /* Configuration */
+    --neutral-gray: #808080;
+    --chroma-factor: 1;
+
+    /* 
+     * 2. TUNED BASES (Reactive to Chroma Factor)
+     * These serve as the "Source of Truth" for saturation for BOTH palettes.
+     * We use OKLCH here to manipulate chroma cleanly before generating scales.
+     */
+    --clr-01-tuned: oklch(from var(--clr-01) l calc(c * var(--chroma-factor)) h);
+    --clr-02-tuned: oklch(from var(--clr-02) l calc(c * var(--chroma-factor)) h);
+    --clr-slct-tuned: oklch(from var(--clr-slct) l calc(c * var(--chroma-factor)) h);
+    --semantic-success-tuned: oklch(from var(--semantic-success) l calc(c * var(--chroma-factor)) h);
+    --semantic-danger-tuned: oklch(from var(--semantic-danger) l calc(c * var(--chroma-factor)) h);
+    --semantic-info-tuned: oklch(from var(--semantic-info) l calc(c * var(--chroma-factor)) h);
+    --semantic-warning-tuned: oklch(from var(--semantic-warning) l calc(c * var(--chroma-factor)) h);
+
+    /* 
+     * 3. FIXED COLORS 
+     * Static colors that do not generate scales.
+     */
+
+    // Day of time Colors
+    --clr-day: #58bced;
+    --clr-day-grad: linear-gradient(45deg, #0087cf, #58bced);
+    --clr-after: #cac036;
+    --clr-after-grad: linear-gradient(45deg, #b88e19, #cac036);
+    --clr-night: #256485;
+    --clr-night-grad: linear-gradient(45deg, #084164, #256485);
+
+    // Termo Colors
+    --clr-termic1: #27ae60;
+    --clr-termic2: #2ecc71;
+    --clr-termic3: #f1c40f;
+    --clr-termic4: #e67e22;
+    --clr-termic5: #e74c3c;
+
+    // Colors files
+    --clrfile-pdf: #fc573b;
+    --clrfile-ai: #ffcc00;
+    --clrfile-psd: #283593;
+    --clrfile-doc: #40a5ed;
+    --clrfile-xls: #21a365;
+    --clrfile-ppt: #ff8f6a;
+    --clrfile-exe: #af2131;
+    --clrfile-zip: #038288;
+    --clrfile-rar: #038288;
+    --clrfile-png: #ff9000;
+    --clrfile-jpg: #feb22f;
+    --clrfile-gif: #fb5fca;
+    --clrfile-other: #666666;
+    --clrfile-html: #8362ff;
+
+    // Colors weather
+    --sun: #ffd209;
+    --sunrise: #ffe70f;
+    --sunset: #f0c402;
+    --moon: #b081e1;
+    --rain: #70c8f9;
+    --rain-str: 10px;
+    --wind: #bad9fc;
+    --wind1: #d1e7ff;
+    --cloud1: #deebfa;
+    --cloud2: #cfdeef;
+    --cloud3: #d1d1d1;
+    --cloud4: #e0e0e0;
+}
+
+/* 
+ * ==========================================
+ * SCALABLE COLORS LOGIC 
+ * ==========================================
+ */
+
+$scalable-colors: (
+    "clr-01",
+    "clr-02",
+    "clr-slct",
+    "semantic-success",
+    "semantic-danger",
+    "semantic-info",
+    "semantic-warning"
+);
+
+/* ------------------------------------------
+   PALETTE: OKLCH
+   ------------------------------------------ */
+
+// Light Mode (OKLCH)
+@mixin oklch-light {
+    /* Structure - Neutral Pure */
+    --clr-board: oklch(from var(--neutral-gray) 90% c h);
+    --bg-app: oklch(from var(--neutral-gray) 96% c h);
+
+    @each $name in $scalable-colors {
+        --#{$name}-bg: oklch(from var(--#{$name}-tuned) calc(l + (1 - l) * 0.995) c h);
+        --#{$name}-ulgt: oklch(from var(--#{$name}-tuned) calc(l + (1 - l) * 0.985) c h);
+        --#{$name}-slgt: oklch(from var(--#{$name}-tuned) calc(l + (1 - l) * 0.80) c h);
+        --#{$name}-lgt: oklch(from var(--#{$name}-tuned) calc(l + (1 - l) * 0.45) c h);
+        --#{$name}-base: var(--#{$name}-tuned);
+        --#{$name}-drk: oklch(from var(--#{$name}-tuned) calc(l * 0.7) c h);
+        --#{$name}-sdrk: oklch(from var(--#{$name}-tuned) calc(l * 0.4) c h);
+        --#{$name}-udrk: oklch(from var(--#{$name}-tuned) calc(l * 0.2) c h);
+    }
+}
+
+// Dark Mode (OKLCH)
+@mixin oklch-dark {
+    /* Structure - Neutral Dark #121212 approx */
+    --bg-app: oklch(from var(--neutral-gray) 13% c h);
+    --clr-board: oklch(from var(--neutral-gray) 20% c h);
+
+    @each $name in $scalable-colors {
+        --#{$name}-bg: oklch(from var(--#{$name}-tuned) calc(l + (1 - l) * 0.995) c h);
+        --#{$name}-ulgt: oklch(from var(--#{$name}-tuned) calc(l + (1 - l) * 0.985) c h);
+        --#{$name}-slgt: oklch(from var(--#{$name}-tuned) calc(l + (1 - l) * 0.80) c h);
+        --#{$name}-lgt: oklch(from var(--#{$name}-tuned) calc(l + (1 - l) * 0.45) c h);
+        --#{$name}-base: var(--#{$name}-tuned);
+        --#{$name}-drk: oklch(from var(--#{$name}-tuned) calc(l * 0.7) c h);
+        --#{$name}-sdrk: oklch(from var(--#{$name}-tuned) calc(l * 0.4) c h);
+        --#{$name}-udrk: oklch(from var(--#{$name}-tuned) calc(l * 0.2) c h);
+    }
+
+    /* UI Semantics (Dark) */
+    --bg-card: var(--clr-01-udrk);
+    /* Dark background */
+    --bg-surface: var(--clr-01-sdrk);
+    --border-subtle: var(--clr-01-drk);
+    --txt-primary: var(--clr-01-ulgt);
+    /* Light text */
+    --txt-secondary: var(--clr-01-lgt);
+}
+
+/* ------------------------------------------
+   PALETTE: COLOR-MIX
+   ------------------------------------------ */
+
+// Light Mode (Mix)
+@mixin mix-light {
+    /* Structure - Neutral Mix */
+    --bg-app: color-mix(in srgb, var(--neutral-gray), white 90%);
+
+    @each $name in $scalable-colors {
+        --#{$name}-bg: color-mix(in srgb, var(--#{$name}-tuned), white 97%);
+        --#{$name}-ulgt: color-mix(in srgb, var(--#{$name}-tuned), white 90%);
+        --#{$name}-slgt: color-mix(in srgb, var(--#{$name}-tuned), white 70%);
+        --#{$name}-lgt: color-mix(in srgb, var(--#{$name}-tuned), white 40%);
+        --#{$name}-base: var(--#{$name}-tuned);
+        --#{$name}-drk: color-mix(in srgb, var(--#{$name}-tuned), black 20%);
+        --#{$name}-sdrk: color-mix(in srgb, var(--#{$name}-tuned), black 50%);
+        --#{$name}-udrk: color-mix(in srgb, var(--#{$name}-tuned), black 80%);
+    }
+
+    /* UI Semantics (Light) */
+    --bg-card: white;
+    --bg-surface: var(--clr-01-ulgt);
+    --border-subtle: var(--clr-01-slgt);
+    --txt-primary: var(--clr-01-udrk);
+    --txt-secondary: var(--clr-01-drk);
+}
+
+// Dark Mode (Mix)
+@mixin mix-dark {
+    /* Structure - Neutral Dark #121212 approx */
+    --bg-app: color-mix(in srgb, var(--neutral-gray), black 86%);
+
+    @each $name in $scalable-colors {
+        --#{$name}-bg: color-mix(in srgb, var(--#{$name}-tuned), white 97%);
+        --#{$name}-ulgt: color-mix(in srgb, var(--#{$name}-tuned), white 90%);
+        --#{$name}-slgt: color-mix(in srgb, var(--#{$name}-tuned), white 70%);
+        --#{$name}-lgt: color-mix(in srgb, var(--#{$name}-tuned), white 40%);
+        --#{$name}-base: var(--#{$name}-tuned);
+        --#{$name}-drk: color-mix(in srgb, var(--#{$name}-tuned), black 20%);
+        --#{$name}-sdrk: color-mix(in srgb, var(--#{$name}-tuned), black 50%);
+        --#{$name}-udrk: color-mix(in srgb, var(--#{$name}-tuned), black 80%);
+    }
+
+    /* UI Semantics (Dark) */
+    --bg-card: var(--clr-01-udrk);
+    --bg-surface: var(--clr-01-sdrk);
+    --border-subtle: var(--clr-01-drk);
+    --txt-primary: var(--clr-01-ulgt);
+    --txt-secondary: var(--clr-01-lgt);
+}
+
+
+/* ------------------------------------------
+   APPLY RULES
+   ------------------------------------------ */
+
+/* OKLCH Selectors */
+html[data-colorpalette="oklch"] {
+
+    &[data-colormode="modelgt"],
+    &[data-colormode="modeauto"] {
+        @include oklch-light;
+    }
+
+    &[data-colormode="modedrk"] {
+        @include oklch-dark;
+    }
+
+    /* Auto Mode Override */
+    @media (prefers-color-scheme: dark) {
+        &[data-colormode="modeauto"] {
+            @include oklch-dark;
+        }
+    }
+}
+
+/* Color-Mix Selectors */
+html[data-colorpalette="colormix"] {
+
+    &[data-colormode="modelgt"],
+    &[data-colormode="modeauto"] {
+        @include mix-light;
+    }
+
+    &[data-colormode="modedrk"] {
+        @include mix-dark;
+    }
+
+    /* Auto Mode Override */
+    @media (prefers-color-scheme: dark) {
+        &[data-colormode="modeauto"] {
+            @include mix-dark;
+        }
+    }
+}

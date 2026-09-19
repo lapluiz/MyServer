@@ -1,0 +1,48 @@
+{
+  "name": "web-node-skeleton",
+  "version": "1.0.0",
+  "description": "Node.js Web Skeleton with Express, MySQL and AI capabilities",
+  "main": "src/server/BCKND-script-app.js",
+  "scripts": {
+    "start": "node src/server/BCKND-script-app.js",
+    "dev": "node --watch src/server/BCKND-script-app.js",
+    "build-css": "sass src/scss:src/assets/css --style compressed --no-source-map",
+    "watch-css": "sass --watch src/scss:src/assets/css --style compressed --no-source-map"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": ">=22.13.1"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "@runware/sdk-js": "^1.2.3",
+    "axios": "^1.11.0",
+    "bcryptjs": "^3.0.3",
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.22.1",
+    "glob": "^13.0.1",
+    "mongoose": "^9.3.1",
+    "mysql2": "^3.15.3",
+    "socket.io": "^4.8.1",
+    "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "postcss-cli": "^11.0.1",
+    "sass": "^1.90.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lapluiz/WebNodeSkeleton.git"
+  },
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/lapluiz/WebNodeSkeleton/issues"
+  },
+  "homepage": "https://github.com/lapluiz/WebNodeSkeleton#readme"
+}

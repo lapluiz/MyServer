@@ -1,0 +1,185 @@
+// BCKND-whatsapp-functions.js
+
+const axios = require('axios');
+require('dotenv').config(); // Para carregar o token do arquivo .env
+
+// Carrega as credenciais da API do arquivo de ambiente para segurança
+const WW_TOKEN = process.env.WW_TOKEN;
+const WW_API_URL = process.env.WW_API_URL;
+
+// ===================================================================
+// FUNÇÕES "CÉREBRO" PARA O WHATSAPP
+// ===================================================================
+
+/**
+ * Envia uma mensagem de texto simples via API Geniuz.
+ * @param {object} requestData - Objeto contendo { numero, mensagem }.
+ */
+async function sendTextMessage(requestData) {
+    console.log('>>> Função "sendTextMessage" foi chamada.');
+    const { numero, mensagem } = requestData;
+
+    // Validações
+    if (!numero || !mensagem) {
+        throw new Error("As propriedades 'numero' e 'mensagem' são obrigatórias.");
+    }
+    if (!WW_TOKEN) {
+        throw new Error("Token da API Geniuz não encontrado. Verifique seu arquivo .env");
+    }
+
+    const url = `${WW_API_URL}/sendMSGText`;
+    const payload = {
+        token: WW_TOKEN,
+        txmensagem: mensagem,
+        txwhatsapp: numero
+    };
+
+    try {
+        const response = await axios.post(url, payload);
+        console.log('Resposta da API Geniuz (Texto):', response.data);
+        return response.data; // Retorna o sucesso
+    } catch (error) {
+        console.error('ERRO na API Geniuz (Texto):', error.response ? error.response.data : error.message);
+        // Lança um novo erro com uma mensagem mais clara para o "porteiro" capturar
+        throw new Error(`Falha ao enviar mensagem de texto: ${error.response?.data?.message || error.message}`);
+    }
+}
+
+/**
+ * Envia uma imagem com base em uma string Base64.
+ * @param {object} requestData - Objeto contendo { numero, mensagem, base64 }.
+ */
+async function sendBase64Image(requestData) {
+    console.log('>>> Função "sendBase64Image" foi chamada.');
+    const { numero, mensagem, base64 } = requestData;
+
+    // Validações
+    if (!numero || !base64) {
+        throw new Error("As propriedades 'numero' e 'base64' são obrigatórias.");
+    }
+     if (!WW_TOKEN) {
+        throw new Error("Token da API Geniuz não encontrado. Verifique seu arquivo .env");
+    }
+
+    const url = `${WW_API_URL}/sendImgBase64`;
+    const payload = {
+        token: WW_TOKEN,
+        txmensagem: mensagem || "Segue imagem.", // Mensagem opcional
+        txnomearquivo: "imagem.jpg",
+        txbase64: base64,
+        txwhatsapp: numero
+    };
+    
+    try {
+        const response = await axios.post(url, payload);
+        console.log('Resposta da API Geniuz (Imagem):', response.data);
+        return response.data; // Retorna o sucesso
+    } catch (error) {
+        console.error('ERRO na API Geniuz (Imagem):', error.response ? error.response.data : error.message);
+        throw new Error(`Falha ao enviar imagem: ${error.response?.data?.message || error.message}`);
+    }
+}
+
+
+// ===================================================================
+// EXPORTAÇÕES
+// ===================================================================
+module.exports = {
+    sendTextMessage,
+    sendBase64Image
+};
+
+c:\Jobs\Aprendizado\node_mySQL\assets\js\axios.min.js c:\Jobs\Aprendizado\node_mySQL\assets\js\BCKND-crud-mariaDB.js c:\Jobs\Aprendizado\node_mySQL\assets\js\BCKND-crud-mongoDB.js c:\Jobs\Aprendizado\node_mySQL\assets\js\BCKND-database-whats.js c:\Jobs\Aprendizado\node_mySQL\assets\js\BCKND-script-ia.js c:\Jobs\Aprendizado\node_mySQL\assets\js\FNTND-script-common-OLD.js c:\Jobs\Aprendizado\node_mySQL\assets\js\FNTND-script-common.js c:\Jobs\Aprendizado\node_mySQL\assets\js\FNTND-script-forms.js c:\Jobs\Aprendizado\node_mySQL\assets\js\FNTND-script-functions.js c:\Jobs\Aprendizado\node_mySQL\assets\js\FNTND-script-ia.js c:\Jobs\Aprendizado\node_mySQL\assets\js\FNTND-script-mongoDB.js c:\Jobs\Aprendizado\node_mySQL\assets\js\FNTND-script-start.js c:\Jobs\Aprendizado\node_mySQL\assets\js\GEN-script-dev.js c:\Jobs\Aprendizado\node_mySQL\assets\js\GEN-script-listeners.js c:\Jobs\Aprendizado\node_mySQL\assets\js\php.ini
+
+
+
+const express = require('express');
+const mongoose = require('mongoose');
+const http = require('http');
+const { Server } = require('socket.io');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const path = require('path');
+require('dotenv').config();
+
+const apiRoutes = require('../routes/api.routes');
+const crudRoutes = require('../routes/crud.routes');
+const testMongoRoutes = require('../routes/test.routes');
+
+const app = express();
+app.use(express.json());
+
+mongoose.connect('mongodb://localhost:27017/')
+    .then(() => console.log('Conectado ao MongoDB!'))
+    .catch(err => console.error('Erro ao conectar:', err));
+
+//app.listen(3000, () => console.log('Servidor rodando em http://localhost:3000'));
+
+const server = http.createServer(app);
+const io = new Server(server, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+    }
+});
+
+// Middleware
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, '../../'))); // Serve root (index.html)
+app.use('/css', express.static(path.join(__dirname, '../assets/css'))); // Serve CSS
+app.use('/js', express.static(path.join(__dirname, '../js'))); // Serve JS Publico
+app.use('/json', express.static(path.join(__dirname, '../json'))); // Serve JSON Schemas
+
+// Routes
+app.use('/api', apiRoutes);
+app.use('/api/crud', crudRoutes);
+app.use('/api/test-mongo', testMongoRoutes);
+
+// Socket.io connection
+io.on('connection', (socket) => {
+    console.log('A user connected:', socket.id);
+
+    socket.on('disconnect', () => {
+        console.log('User disconnected:', socket.id);
+    });
+});
+
+// Pass io to routes if needed via middleware
+app.use((req, res, next) => {
+    req.io = io;
+    next();
+});
+
+const PORT = process.env.PORT || 3000;
+
+server.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+    console.log(`Access: http://localhost:${PORT}`);
+});
+
+module.exports = app;
+
+
+    <!-- Scripts -->
+    <!-- <script src="/socket.io/socket.io.js"></script> -->
+    <script type="module" src="/js/FNTND-script-main.js"></script>
+
+    <!-- <script>
+        // Keep Socket logic independent
+        const socket = io();
+        const statusEl = document.getElementById('socket-status');
+
+        socket.on('connect', () => {
+            statusEl.textContent = 'Connected';
+            statusEl.style.color = 'green';
+        });
+
+        socket.on('disconnect', () => {
+            statusEl.textContent = 'Disconnected';
+            statusEl.style.color = 'red';
+        });
+    </script> -->
+
+    

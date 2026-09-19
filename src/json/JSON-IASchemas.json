@@ -1,0 +1,347 @@
+{
+    "systemInstruction": {
+        "recipe": {
+            "text": "Você deve normalizar todas as unidades de medida para suas formas abreviadas estritas. Siga esta tabela de conversão:\n\nPESO E MASSA:\n- Quilograma -> kg\n- Grama -> g\n- Miligrama -> mg\n- Libra -> lb\n- Onça -> oz\n\nVOLUME:\n- Litro -> l\n- Mililitro -> ml\n- Decilitro -> dl\n\nMEDIDAS CASEIRAS (CULINÁRIAS):\n- Xícara (chá) -> xíc.\n- Colher de sopa -> c.s.\n- Colher de sobremesa -> c.sob.\n- Colher de chá -> c.chá\n- Colher de café -> c.café\n- Copo americano (200ml) -> c.amer.\n- Pitada -> pit.\n- Fio (ex: de azeite) -> fio\n- Dente (ex: de alho) -> dte.\n- Cabeça (ex: de alho) -> cab.\n- Maço -> maç.\n- Ramo -> ram.\n- Unidade -> un.\n- Fatia -> fat.\n- Pedaço -> ped.\n- Pacote -> pct.\n- Lata -> lata\n- Caixa -> cx.\n- Vidro -> vd.\n\nTEMPERATURA E TEMPO:\n- Graus Celsius -> °C\n- Minutos -> min\n- Horas -> h\n\nAs instruções de preparo devem ser diretas e profissionais. \nA imagem descrita deve ser detalhada para servir de prompt de geração de imagem.",
+            "image": "Gere uma imagem ultra realista, fotografia profissional de comida em 8k, iluminação de estúdio natural, macro photography, texturas detalhadas e apetitosas."
+        },
+        "plant": {
+            "text": "Você é um botânico especialista e consultor técnico de cultivo. Você deve retornar informações reais, precisas e atualizadas, com preferência estrita em referências científicas (Taxonomia e Botânica Aplicada). Evite mitos populares de jardinagem e foque em dados biológicos comprovados para garantir a saúde da planta e a segurança do cultivador.",
+            "image": "Gere uma imagem ultra realista botanicamente precisa em 8k, macro photography, foco nítido em detalhes da folhagem, fundo natural suave com bokeh, iluminação difusa de alta fidelidade."
+        },
+        "spice": {
+            "text": "Você é um especialista em especiarias e condimentos (Chef e Historiador Gastronômico). Você deve normalizar todas as unidades de medida para as formas abreviadas estritas (kg, g, mg, l, ml, xíc., c.s., c.sob., c.chá, c.café, pit.). As informações devem cobrir aspectos botânicos e culinários, garantindo precisão técnica sobre a aplicação e a descrição sensorial (sabor e aroma). A imagem descrita deve ser um prompt detalhado em inglês focado em texturas e cores reais do ingrediente.",
+            "image": "Gere uma imagem ultra realista de especiarias em 8k, fotografia macro de alimentos com alta textura, cores vibrantes, iluminação dramática de estúdio, estilo editorial."
+        },
+        "utensils": {
+            "text": "Você é um especialista em equipamentos de cozinha e design industrial. Sua função é descrever utensílios domésticos e profissionais com precisão física e funcional. Deve identificar o item pelo nome técnico e popular, detalhar sua utilidade e citar marcas que são referência de mercado por qualidade ou inovação. O tom deve ser informativo e prático.",
+            "image": "Gere uma imagem ultra realista de produto em 8k, fotografia de estúdio comercial, fundo infinito ou contextualizado clean, iluminação de destaque 'rim light', alta fidelidade de materiais."
+        }
+    },
+    "responseSchema": {
+        "recipe": {
+            "text": {
+                "type": "object",
+                "properties": {
+                    "nome": {
+                        "type": "string"
+                    },
+                    "nome_popular": {
+                        "type": "string"
+                    },
+                    "descricao": {
+                        "type": "string"
+                    },
+                    "rendimento": {
+                        "type": "string"
+                    },
+                    "imagem_prompt": {
+                        "type": "string",
+                        "description": "Generate a text-to-image prompt."
+                    },
+                    "imagem_descricao": {
+                        "type": "string"
+                    },
+                    "ingredientes": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "item": {
+                                    "type": "string"
+                                },
+                                "quantidade": {
+                                    "type": "number"
+                                },
+                                "unidade": {
+                                    "type": "string"
+                                },
+                                "nota_tecnica": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "item",
+                                "quantidade",
+                                "unidade"
+                            ]
+                        }
+                    },
+                    "modo_preparo": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "passo": {
+                                    "type": "integer"
+                                },
+                                "instrucao": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "passo",
+                                "instrucao"
+                            ]
+                        }
+                    },
+                    "lista_compras": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "item": {
+                                    "type": "string"
+                                },
+                                "setor_mercado": {
+                                    "type": "string"
+                                },
+                                "quantidade": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "item",
+                                "quantidade"
+                            ]
+                        }
+                    }
+                },
+                "required": [
+                    "nome",
+                    "ingredientes",
+                    "modo_preparo",
+                    "lista_compras",
+                    "imagem_prompt",
+                    "imagem_descricao"
+                ]
+            },
+            "image": {
+                "config": {
+                    "numberOfImages": 1,
+                    "imageSize": "1024x1024",
+                    "aspectRatio": "1:1",
+                    "safetySetting": "BLOCK_MEDIUM_AND_ABOVE"
+                }
+            }
+        },
+        "plant": {
+            "text": {
+                "type": "object",
+                "properties": {
+                    "nome": {
+                        "type": "string"
+                    },
+                    "nome_popular": {
+                        "type": "string"
+                    },
+                    "nome_cientifico": {
+                        "type": "string"
+                    },
+                    "descricao": {
+                        "type": "string"
+                    },
+                    "familia": {
+                        "type": "string"
+                    },
+                    "imagem_prompt": {
+                        "type": "string"
+                    },
+                    "luminosidade": {
+                        "type": "string"
+                    },
+                    "umidade_solo": {
+                        "type": "string"
+                    },
+                    "toxicidade": {
+                        "type": "object",
+                        "properties": {
+                            "pets": {
+                                "type": "boolean"
+                            },
+                            "humanos": {
+                                "type": "boolean"
+                            },
+                            "detalhes": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "pets",
+                            "humanos",
+                            "detalhes"
+                        ]
+                    },
+                    "dificuldade_cuidado": {
+                        "type": "string",
+                        "enum": [
+                            "Fácil",
+                            "Moderada",
+                            "Difícil",
+                            "Especialista"
+                        ]
+                    },
+                    "crescimento": {
+                        "type": "string"
+                    },
+                    "clima_ideal": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "nome_popular",
+                    "nome_cientifico",
+                    "familia",
+                    "luminosidade",
+                    "toxicidade",
+                    "dificuldade_cuidado",
+                    "imagem_prompt"
+                ]
+            },
+            "image": {
+                "config": {
+                    "numberOfImages": 1,
+                    "imageSize": "1024x1024",
+                    "aspectRatio": "3:4",
+                    "safetySetting": "BLOCK_MEDIUM_AND_ABOVE"
+                }
+            }
+        },
+        "spice": {
+            "text": {
+                "type": "object",
+                "properties": {
+                    "nome": {
+                        "type": "string"
+                    },
+                    "nome_cientifico": {
+                        "type": "string"
+                    },
+                    "nome_popular": {
+                        "type": "string"
+                    },
+                    "descricao": {
+                        "type": "string"
+                    },
+                    "descricao_sabor": {
+                        "type": "string"
+                    },
+                    "paises_origem": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "aplicacoes_culinarias": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "categoria": {
+                                    "type": "string"
+                                },
+                                "sugestao": {
+                                    "type": "string"
+                                },
+                                "quantidade_aprox": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "harmonizacao_bebida": {
+                        "type": "string"
+                    },
+                    "imagem_prompt": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "nome",
+                    "nome_cientifico",
+                    "descricao_sabor",
+                    "aplicacoes_culinarias",
+                    "imagem_prompt"
+                ]
+            },
+            "image": {
+                "config": {
+                    "numberOfImages": 1,
+                    "imageSize": "1024x1024",
+                    "aspectRatio": "1:1",
+                    "safetySetting": "BLOCK_MEDIUM_AND_ABOVE"
+                }
+            }
+        },
+        "utensils": {
+            "text": {
+                "type": "object",
+                "properties": {
+                    "nome": {
+                        "type": "string"
+                    },
+                    "nome_popular": {
+                        "type": "string"
+                    },
+                    "descricao": {
+                        "type": "string"
+                    },
+                    "descricao_fisica": {
+                        "type": "string"
+                    },
+                    "funcionalidade": {
+                        "type": "string"
+                    },
+                    "marcas_modelos_referencia": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "marca": {
+                                    "type": "string"
+                                },
+                                "modelo_destaque": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "imagem_prompt": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "nome",
+                    "descricao_fisica",
+                    "funcionalidade",
+                    "marcas_modelos_referencia",
+                    "imagem_prompt"
+                ]
+            },
+            "image": {
+                "config": {
+                    "numberOfImages": 1,
+                    "imageSize": "1024x1024",
+                    "aspectRatio": "16:9",
+                    "safetySetting": "BLOCK_MEDIUM_AND_ABOVE"
+                }
+            }
+        }
+    },
+    "models": {
+        "text": {
+            "modelname": "gemini-2.5-flash-lite",
+            "input_cost_usd_1m": 0.10,
+            "output_cost_usd_1m": 0.40
+        },
+        "image": {
+            "modelname": "imagen-3.0-generate-002",
+            "cost_per_image_1k_usd": 0.03,
+            "cost_per_image_4k_usd": 0.12
+        }
+    },
+    "apiconfig": {
+        "usd_to_brl": 5.10,
+        "usd_max_request": 0.50,
+        "output_average_tokens": 1600
+    }
+}

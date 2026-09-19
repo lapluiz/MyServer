@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel ESP32</title>
+    
+    <link rel="stylesheet" href="/src/assets/css/main.css">
+    
+    <style>
+        body {
+            background-color: #f4f6f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ddd;
+        }
+        .status-badge {
+            padding: 8px 15px;
+            border-radius: 20px;
+            background: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .card {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        h3 {
+            margin-top: 0;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+            font-size: 14px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .logs-container {
+            height: 300px;
+            overflow-y: auto;
+            background: #1e1e1e;
+            border-radius: 8px;
+            padding: 15px;
+            color: #fff;
+            font-family: monospace;
+        }
+        .log-item {
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+        }
+        .log-time {
+            color: #4CAF50;
+            margin-right: 10px;
+            font-size: 12px;
+        }
+        .log-data {
+            color: #e6e6e6;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h2>📡 Integração ESP32</h2>
+            <div class="status-badge">
+                Servidor Socket: <span id="socket-status" style="color: #999;">🟡 Conectando...</span>
+            </div>
+        </div>
+
+        <div class="grid">
+            <!-- Coluna 1: Simulador -->
+            <div class="card">
+                <h3>Simular Envio (POST)</h3>
+                <p style="font-size: 13px; color: #666; margin-bottom: 20px;">Use este formulário para enviar dados para a rota <b>/api/esp32/data</b> simulando como se fosse o seu Arduino/ESP32.</p>
+                
+                <div class="form-group">
+                    <label>Temperatura (°C)</label>
+                    <input type="number" id="sim-temp" value="25" step="0.1">
+                </div>
+                
+                <div class="form-group">
+                    <label>Umidade (%)</label>
+                    <input type="number" id="sim-umidade" value="60">
+                </div>
+                
+                <div class="form-group">
+                    <label>Outra Informação (Texto)</label>
+                    <input type="text" id="sim-texto" value="Tudo normal">
+                </div>
+                
+                <button id="btnSimular" class="btn">Simular ESP32 POST</button>
+            </div>
+
+            <!-- Coluna 2: Recebimento -->
+            <div class="card">
+                <h3>Monitor em Tempo Real</h3>
+                <p style="font-size: 13px; color: #666; margin-bottom: 20px;">Qualquer requisição que bater na rota do servidor aparecerá aqui instantaneamente via Socket.io.</p>
+                
+                <div class="logs-container" id="esp32-logs">
+                    <!-- Logs aparecerão aqui -->
+                    <div style="color: #888; font-style: italic; font-size: 13px;">Aguardando dados...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bibliotecas -->
+    <script src="/socket.io/socket.io.js"></script>
+    
+    <!-- Lógica do ESP32 -->
+    <script type="module">
+        import { simularEnvioESP32 } from '/src/js/FNTND-script-esp32.js';
+
+        const btnSimular = document.getElementById('btnSimular');
+        
+        btnSimular.addEventListener('click', async () => {
+            const temp = document.getElementById('sim-temp').value;
+            const umid = document.getElementById('sim-umidade').value;
+            const texto = document.getElementById('sim-texto').value;
+
+            // Monta o payload no formato JSON
+            const payload = {
+                temperatura: Number(temp),
+                umidade: Number(umid),
+                status: texto
+            };
+
+            const textBtnOriginal = btnSimular.textContent;
+            btnSimular.textContent = "Enviando...";
+            btnSimular.disabled = true;
+
+            try {
+                // Dispara o POST simulando o microcontrolador
+                await simularEnvioESP32(payload);
+                btnSimular.textContent = "Sucesso!";
+                btnSimular.style.backgroundColor = "#28a745";
+            } catch (error) {
+                alert("Erro ao enviar dados. Verifique o servidor.");
+                btnSimular.style.backgroundColor = "#dc3545";
+            } finally {
+                setTimeout(() => {
+                    btnSimular.textContent = textBtnOriginal;
+                    btnSimular.style.backgroundColor = "";
+                    btnSimular.disabled = false;
+                }, 1500);
+            }
+        });
+    </script>
+</body>
+</html>

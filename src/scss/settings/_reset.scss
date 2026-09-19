@@ -1,0 +1,90 @@
+/* 1. Box-sizing mais previsível e reset básico */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* 2. Scroll suave nativo */
+html {
+    scroll-behavior: smooth;
+}
+
+/* 3. Configurações essenciais para o Body */
+body {
+    min-height: 100vh;
+    /* Garante que o body ocupe no mínimo toda a altura da tela */
+    line-height: 1.5;
+    /* Melhora a legibilidade padrão */
+    text-rendering: optimizeSpeed;
+    /* Melhora a performance de renderização de texto */
+    -webkit-font-smoothing: antialiased;
+    /* Deixa as fontes mais nítidas no macOS/iOS */
+    -moz-osx-font-smoothing: grayscale;
+    //font-size: 62.5%;
+
+}
+
+/* 4. Remover marcadores de listas */
+ul,
+ol {
+    list-style: none;
+}
+
+/* 5. Comportamento responsivo padrão para mídias */
+img,
+picture,
+video,
+canvas,
+svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    /* Mantém a proporção da imagem */
+}
+
+/* 6. Herdando fontes em elementos de formulário */
+/* Por padrão, inputs e buttons não herdam a fonte do body */
+input,
+button,
+textarea,
+select {
+    font: inherit;
+    color: inherit;
+}
+
+/* 7. Evitar que textos longos quebrem o layout */
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    overflow-wrap: break-word;
+}
+
+/* 8. Contexto de empilhamento para frameworks modernos (React, Next.js, Vue) */
+#root,
+#__next,
+#app {
+    isolation: isolate;
+}
+
+/* 9. Acessibilidade: Respeitar o 'prefers-reduced-motion' do sistema do usuário */
+@media (prefers-reduced-motion: reduce) {
+    html:focus-within {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

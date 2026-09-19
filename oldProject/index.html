@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" data-colormode="modeauto" data-colorpalette="oklch">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Node SPA</title>
+    <link rel="stylesheet" href="/src/assets/css/main.css">
+    <script type="importmap">
+    {
+        "imports": {
+            "axios": "https://esm.sh/axios@1.6.7",
+            "@google/generative-ai": "https://esm.run/@google/generative-ai"
+        }
+    }
+    </script>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="brand" data-link>My App</a>
+            <ul class="nav-links">
+                <li><a href="/" data-link>Home</a></li>
+                <li><a href="/products" data-link>Products</a></li>
+                <li><a href="/about" data-link>About</a></li>
+                <li><a href="/contact" data-link>Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container" id="app">
+        <!-- Content will be loaded here -->
+    </div>
+
+    <div class="container status-bar">
+        <p>Socket Status: <span id="socket-status">Connecting...</span></p>
+    </div>
+
+    <!-- Scripts -->
+    <!-- <script src="/socket.io/socket.io.js"></script> -->
+    <script type="module" src="/js/FNTND-script-main.js"></script>
+
+    <!-- <script>
+        // Keep Socket logic independent
+        const socket = io();
+        const statusEl = document.getElementById('socket-status');
+
+        socket.on('connect', () => {
+            statusEl.textContent = 'Connected';
+            statusEl.style.color = 'green';
+        });
+
+        socket.on('disconnect', () => {
+            statusEl.textContent = 'Disconnected';
+            statusEl.style.color = 'red';
+        });
+    </script> -->
+</body>
+
+</html>
