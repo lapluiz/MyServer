@@ -1,1 +1,0 @@
-CreateObject("WScript.Shell").Run "wsl -d Ubuntu pm2 resurrect", 0, False

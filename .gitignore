@@ -1,0 +1,26 @@
+# Dependências
+node_modules/
+
+# Variáveis de ambiente (segredos)
+.env
+.env.*
+!.env.example
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor - configs de deploy/sync que podem conter credenciais
+.vscode/ftp-sync.json
+.vscode/sftp.json
+
+# Testes / builds
+coverage/
+*.map
+

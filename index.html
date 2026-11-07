@@ -1,110 +1,402 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-colormode="modeauto" data-colorpalette="oklch">
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- SEO Meta Tags -->
-    <meta name="description" content="Descrição da sua aplicação web para os motores de busca.">
-    <meta name="keywords" content="webapp, node, spa, javascript">
-    <meta name="author" content="Seu Nome">
-    
-    <!-- Open Graph (Redes Sociais) -->
-    <meta property="og:title" content="My Web App">
-    <meta property="og:description" content="Descrição detalhada para quando o link for compartilhado.">
-    <meta property="og:type" content="website">
-    
-    <title>My Web App - Principal</title>
-    
-    <!-- Estilos -->
-    <link rel="stylesheet" href="/src/assets/css/main.css">
-    
-    <!-- Import Maps para dependências JS (ES Modules) -->
-    <script type="importmap">
-    {
-        "imports": {
-            "axios": "https://esm.sh/axios@1.6.7",
-            "@google/generative-ai": "https://esm.run/@google/generative-ai"
+    <title>Hello World - Animated</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #050510;
+            --text-main: #ffffff;
+            --text-accent: #00f0ff;
+            --text-accent-2: #ff00ea;
+            --font-main: 'Montserrat', sans-serif;
+            --font-mono: 'Space Mono', monospace;
+            --dot-color: rgba(255, 255, 255, 0.1);
         }
-    }
-    </script>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            /* Polka dot pattern using radial gradients */
+            background-image: radial-gradient(var(--dot-color) 1px, transparent 1px);
+            background-size: 30px 30px;
+            perspective: 1000px;
+            transform-style: preserve-3d;
+        }
+
+        .background::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, transparent 30%, var(--bg-color) 70%);
+            animation: rotateBg 60s linear infinite;
+        }
+
+        .container {
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .title-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .hello {
+            font-size: clamp(3rem, 10vw, 8rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -2px;
+            line-height: 1;
+            margin: 0;
+            position: relative;
+            color: transparent;
+            -webkit-text-stroke: 2px rgba(255, 255, 255, 0.2);
+        }
+
+        .hello::before,
+        .hello::after {
+            content: "HELLO";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            color: var(--text-main);
+            -webkit-text-stroke: 0;
+            overflow: hidden;
+        }
+
+        .hello::before {
+            left: 3px;
+            text-shadow: -2px 0 var(--text-accent);
+            animation: glitch-anim-1 3s infinite linear alternate-reverse;
+            clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+        }
+
+        .hello::after {
+            left: -3px;
+            text-shadow: -2px 0 var(--text-accent-2);
+            animation: glitch-anim-2 2.5s infinite linear alternate-reverse;
+            clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+        }
+
+        .world {
+            font-size: clamp(4rem, 12vw, 10rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -4px;
+            line-height: 0.8;
+            margin: 0;
+            background: linear-gradient(45deg, var(--text-accent), var(--text-accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 20px rgba(0, 240, 255, 0.3));
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .subtitle {
+            font-family: var(--font-mono);
+            font-size: clamp(0.8rem, 2vw, 1.2rem);
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-top: 2rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .subtitle::after {
+            content: '|';
+            position: absolute;
+            right: -10px;
+            color: var(--text-accent);
+            animation: blink 1s step-end infinite;
+        }
+
+        .btn-interactive {
+            margin-top: 3rem;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-main);
+            font-family: var(--font-mono);
+            font-size: 1rem;
+            padding: 1rem 2.5rem;
+            cursor: pointer;
+            border-radius: 50px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            backdrop-filter: blur(5px);
+        }
+
+        .btn-interactive::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: all 0.5s ease;
+        }
+
+        .btn-interactive:hover {
+            border-color: var(--text-accent);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .btn-interactive:hover::before {
+            left: 100%;
+        }
+
+        .btn-interactive:active {
+            transform: translateY(1px);
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-15px) rotate(1deg);
+            }
+
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+        }
+
+        @keyframes rotateBg {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes glitch-anim-1 {
+            0% {
+                clip-path: polygon(0 2%, 100% 2%, 100% 5%, 0 5%);
+            }
+
+            20% {
+                clip-path: polygon(0 15%, 100% 15%, 100% 15%, 0 15%);
+            }
+
+            40% {
+                clip-path: polygon(0 10%, 100% 10%, 100% 20%, 0 20%);
+            }
+
+            60% {
+                clip-path: polygon(0 1%, 100% 1%, 100% 2%, 0 2%);
+            }
+
+            80% {
+                clip-path: polygon(0 33%, 100% 33%, 100% 33%, 0 33%);
+            }
+
+            100% {
+                clip-path: polygon(0 44%, 100% 44%, 100% 44%, 0 44%);
+            }
+        }
+
+        @keyframes glitch-anim-2 {
+            0% {
+                clip-path: polygon(0 25%, 100% 25%, 100% 30%, 0 30%);
+            }
+
+            20% {
+                clip-path: polygon(0 3%, 100% 3%, 100% 3%, 0 3%);
+            }
+
+            40% {
+                clip-path: polygon(0 5%, 100% 5%, 100% 20%, 0 20%);
+            }
+
+            60% {
+                clip-path: polygon(0 2%, 100% 2%, 100% 2%, 0 2%);
+            }
+
+            80% {
+                clip-path: polygon(0 83%, 100% 83%, 100% 83%, 0 83%);
+            }
+
+            100% {
+                clip-path: polygon(0 74%, 100% 74%, 100% 74%, 0 74%);
+            }
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.5;
+            z-index: 1;
+            animation: moveOrb 20s infinite alternate ease-in-out;
+        }
+
+        .orb-1 {
+            width: 300px;
+            height: 300px;
+            background: var(--text-accent);
+            top: -100px;
+            left: -100px;
+        }
+
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            background: var(--text-accent-2);
+            bottom: -150px;
+            right: -100px;
+            animation-delay: -10s;
+        }
+
+        @keyframes moveOrb {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            100% {
+                transform: translate(50px, 50px) scale(1.2);
+            }
+        }
+    </style>
 </head>
+
 <body>
-    <!-- Cabeçalho Principal -->
-    <header class="header">
-        <div class="container">
-            <a href="/" class="brand-logo" aria-label="Ir para a página inicial">My App</a>
-            
-            <!-- Navegação Semântica -->
-            <nav class="navbar" aria-label="Navegação principal">
-                <ul>
-                    <li><a href="/" aria-current="page">Início</a></li>
-                    <li><a href="/sobre">Sobre</a></li>
-                    <li><a href="/servicos">Serviços</a></li>
-                    <li><a href="/contato">Contato</a></li>
-                </ul>
-            </nav>
+    <div class="background"></div>
+
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <div class="container">
+        <div class="title-wrapper">
+            <h1 class="hello" data-text="HELLO">HELLO</h1>
+            <h2 class="world">WORLD</h2>
         </div>
-    </header>
 
-    <!-- Conteúdo Principal -->
-    <main id="main-content">
-        <!-- Seção de Destaque / Hero -->
-        <section class="hero-section" aria-labelledby="hero-title">
-            <div class="container">
-                <h1 id="hero-title">Bem-vindo ao My App</h1>
-                <p>Uma aplicação construída com as melhores práticas de HTML semântico e SEO.</p>
-                <button type="button" class="cta-button">Começar Agora</button>
-            </div>
-        </section>
-
-        <!-- Seção de Conteúdo Auxiliar (Features/Artigos) -->
-        <section class="features-section" aria-labelledby="features-title">
-            <div class="container">
-                <h2 id="features-title">Nossos Recursos</h2>
-                <div class="grid-layout">
-                    <article class="feature-card">
-                        <h3>Performance</h3>
-                        <p>Carregamento rápido e otimizado.</p>
-                    </article>
-                    <article class="feature-card">
-                        <h3>Acessibilidade</h3>
-                        <p>Desenvolvido para todos os usuários.</p>
-                    </article>
-                    <article class="feature-card">
-                        <h3>Responsividade</h3>
-                        <p>Funciona perfeitamente em qualquer dispositivo.</p>
-                    </article>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Conteúdo lateral (Opcional, usado para banners, links extras, etc) -->
-        <aside class="sidebar">
-            <div class="container">
-                <h3>Informações Adicionais</h3>
-                <p>Aqui você pode colocar widgets ou links importantes.</p>
-            </div>
-        </aside>
-    </main>
-
-    <!-- Rodapé -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <p>&copy; 2026 My App. Todos os direitos reservados.</p>
-                <nav aria-label="Navegação do rodapé">
-                    <ul>
-                        <li><a href="/privacidade">Política de Privacidade</a></li>
-                        <li><a href="/termos">Termos de Uso</a></li>
-                    </ul>
-                </nav>
-            </div>
+        <div>
+            <p class="subtitle" id="typewriter"></p>
         </div>
-    </footer>
 
-    <!-- Scripts -->
-    <script src="/socket.io/socket.io.js"></script>
-    <script type="module" src="/src/js/FNTND-script-whats.js"></script>
+        <div>
+            <button class="btn-interactive" onclick="triggerEffect()">Initialize</button>
+        </div>
+    </div>
+
+    <script>
+        // Typewriter effect for the subtitle
+        const subtitleText = "Beginning transmission...";
+        const subtitleElement = document.getElementById('typewriter');
+        let i = 0;
+
+        function typeWriter() {
+            if (i < subtitleText.length) {
+                subtitleElement.innerHTML += subtitleText.charAt(i);
+                i++;
+                setTimeout(typeWriter, 100);
+            }
+        }
+
+        // Start typewriter after a short delay
+        setTimeout(typeWriter, 1000);
+
+        // Interactive button effect
+        function triggerEffect() {
+            const btn = document.querySelector('.btn-interactive');
+            const worldText = document.querySelector('.world');
+
+            // Change text temporarily
+            btn.textContent = "SYSTEM ACTIVE";
+            btn.style.color = "var(--text-main)";
+            btn.style.backgroundColor = "rgba(0, 240, 255, 0.2)";
+            btn.style.borderColor = "var(--text-accent)";
+
+            // Add a pulse effect to the World text
+            worldText.style.filter = "drop-shadow(0 0 40px rgba(255, 0, 234, 0.8))";
+
+            // Reset after a few seconds
+            setTimeout(() => {
+                btn.textContent = "INITIALIZE";
+                btn.style.backgroundColor = "transparent";
+                btn.style.borderColor = "rgba(255,255,255,0.2)";
+                worldText.style.filter = "drop-shadow(0 0 20px rgba(0, 240, 255, 0.3))";
+            }, 2000);
+        }
+
+        // Add subtle parallax effect on mouse move
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+
+            const titleWrapper = document.querySelector('.title-wrapper');
+            const orb1 = document.querySelector('.orb-1');
+            const orb2 = document.querySelector('.orb-2');
+
+            // Move elements slightly based on mouse position
+            titleWrapper.style.transform = `translate(${x * 20 - 10}px, ${y * 20 - 10}px)`;
+            orb1.style.transform = `translate(${x * -50}px, ${y * -50}px)`;
+            orb2.style.transform = `translate(${x * 50}px, ${y * 50}px)`;
+        });
+    </script>
 </body>
+
 </html>
