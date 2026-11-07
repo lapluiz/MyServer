@@ -24,5 +24,11 @@ module.exports = Object.freeze({
     NODE_ENV: process.env.NODE_ENV || 'development',
     HOST: process.env.HOST || 'localhost',
     PORT,
+    DB: Object.freeze({
+        HOST: process.env.MDB_HOST || 'localhost',
+        PORT: Number(process.env.MDB_PORT) || 3306,
+        USER: process.env.MDB_USER || 'app_user',
+        PASSWORD: process.env.MDB_PASSWORD || '',
+        NAME: process.env.MDB_NAME || 'app_db',
+    }),
 });
-

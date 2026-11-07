@@ -1,5 +1,5 @@
 /**
- * Ponto de entrada: cria o servidor HTTP, acopla o Socket.io e inicia o listen.
+ * Ponto de entrada: cria o servidor HTTP, acopla o Socket.io, garante o schema do MariaDB e inicia o listen.
  *   npm start   -> node src/server.js
  *   npm run dev -> node --watch src/server.js (reinicia ao salvar)
  */
@@ -7,6 +7,7 @@ const http = require('node:http');
 const { Server } = require('socket.io');
 
 const env = require('./config/env');
+const { ensureSchema } = require('./config/schema');
 const createApp = require('./app');
 const setupSockets = require('./sockets');
 
@@ -26,9 +27,18 @@ server.on('error', (err) => {
     throw err;
 });
 
-server.listen(env.PORT, env.HOST, () => {
-    console.log(`[server] Rodando em http://localhost:${env.PORT} (${env.NODE_ENV})`);
-});
+ensureSchema()
+    .then(() => {
+        console.log('[db] Tabelas iniciais verificadas (tbl_user, tbl_products).');
+    })
+    .catch((err) => {
+        console.warn(`[db] Não foi possível verificar as tabelas na subida: ${err.message}`);
+    })
+    .finally(() => {
+        server.listen(env.PORT, env.HOST, () => {
+            console.log(`[server] Rodando em http://localhost:${env.PORT} (${env.NODE_ENV})`);
+        });
+    });
 
 // Encerramento gracioso (Ctrl+C)
 function shutdown(signal) {
@@ -39,4 +49,3 @@ function shutdown(signal) {
 
 process.on('SIGINT', () => shutdown('SIGINT'));
 process.on('SIGTERM', () => shutdown('SIGTERM'));
-

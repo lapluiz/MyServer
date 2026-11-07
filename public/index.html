@@ -15,6 +15,10 @@
             <h1>MyServer</h1>
         </div>
         <p class="subtitle">Aplicação Node base rodando em <code id="origin">localhost</code></p>
+        <nav class="nav-links">
+            <a class="nav-link is-active" href="/">Painel Principal</a>
+            <a class="nav-link" href="/index_mariaDB.html">CRUD Produtos (MariaDB)</a>
+        </nav>
     </header>
 
     <main class="grid">
@@ -31,6 +35,21 @@
                 <dt>Última verificação</dt><dd id="server-checked">—</dd>
             </dl>
             <button class="btn" id="btn-health">Verificar novamente</button>
+        </section>
+
+        <!-- MariaDB -->
+        <section class="card">
+            <div class="card__head">
+                <h2>MariaDB</h2>
+                <span class="badge" id="db-badge">verificando…</span>
+            </div>
+            <dl class="info">
+                <dt>Host</dt><dd id="db-host">—</dd>
+                <dt>Banco</dt><dd id="db-name">—</dd>
+                <dt>Versão</dt><dd id="db-version">—</dd>
+                <dt>Detalhe</dt><dd id="db-detail">—</dd>
+            </dl>
+            <button class="btn" id="btn-db">Testar conexão DB</button>
         </section>
 
         <!-- Socket.io -->
@@ -51,24 +70,27 @@
         <!-- Teste de API -->
         <section class="card card--wide">
             <div class="card__head">
-                <h2>Teste de API</h2>
+                <h2>Teste de API &amp; DinamicCRUD (por Alias)</h2>
                 <span class="badge" id="api-badge">aguardando</span>
             </div>
             <div class="actions">
                 <button class="btn" data-url="/api">GET /api</button>
                 <button class="btn" data-url="/api/health">GET /api/health</button>
+                <button class="btn" data-url="/api/crud/tables">GET /api/crud/tables (Aliases)</button>
+                <button class="btn" id="btn-crud-insert">INSERT (alias: products)</button>
+                <button class="btn" id="btn-crud-select">SELECT (alias: products)</button>
+                <button class="btn btn--ghost" id="btn-crud-block">Teste Security Block (tbl_products)</button>
                 <button class="btn btn--ghost" data-url="/api/nao-existe">GET /api/nao-existe (404)</button>
             </div>
             <pre class="output" id="api-output">Clique em um botão para fazer uma requisição.</pre>
         </section>
     </main>
 
-    <footer class="footer">Express 5 · Socket.io 4 · Node <span id="footer-node">—</span></footer>
+    <footer class="footer">Express 5 · Socket.io 4 · MariaDB · Node <span id="footer-node">—</span></footer>
 
     <!-- Cliente Socket.io servido automaticamente pelo servidor -->
     <script src="/socket.io/socket.io.js"></script>
-    <script type="module" src="/js/app.js"></script>
+    <script type="module" src="/js/FNTND-script-app.js"></script>
 </body>
 
 </html>
-

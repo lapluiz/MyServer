@@ -1,7 +1,9 @@
 /**
- * Página de teste: verifica a API (/api/health) e a conexão Socket.io.
- * Usa apenas fetch nativo e o cliente global "io" (carregado em /socket.io/socket.io.js).
+ * FNTND-script-app.js
+ * Página de teste: verifica a API (/api/health), MariaDB, CRUD Dinâmico por Alias e Socket.io.
  */
+import { requestDinamicCRUD } from './FNTND-script-dinamicCrud.js';
+
 const $ = (id) => document.getElementById(id);
 
 function setStatus(el, text, state) {
@@ -15,6 +17,21 @@ function formatUptime(totalSeconds) {
     const m = Math.floor((totalSeconds % 3600) / 60);
     const s = totalSeconds % 60;
     return [h && `${h}h`, (h || m) && `${m}m`, `${s}s`].filter(Boolean).join(' ');
+}
+
+function updateDbCard(db) {
+    if (!db) return;
+    $('db-host').textContent = db.host || '—';
+    $('db-name').textContent = db.database || '—';
+    if (db.connected) {
+        setStatus($('db-badge'), 'conectado', 'ok');
+        $('db-version').textContent = db.version || '—';
+        $('db-detail').textContent = db.user || 'ok';
+    } else {
+        setStatus($('db-badge'), 'desconectado', 'err');
+        $('db-version').textContent = '—';
+        $('db-detail').textContent = db.error || 'erro';
+    }
 }
 
 $('origin').textContent = window.location.host;
@@ -33,6 +50,7 @@ async function checkHealth() {
         $('footer-node').textContent = data.node;
         $('server-uptime').textContent = formatUptime(data.uptime);
         $('server-checked').textContent = new Date().toLocaleTimeString('pt-BR');
+        updateDbCard(data.db);
     } catch (err) {
         setStatus($('server-badge'), 'offline', 'err');
         setStatus($('brand-dot'), '', 'err');
@@ -41,6 +59,7 @@ async function checkHealth() {
 }
 
 $('btn-health').addEventListener('click', checkHealth);
+$('btn-db').addEventListener('click', checkHealth);
 checkHealth();
 setInterval(checkHealth, 10000);
 
@@ -100,6 +119,49 @@ document.querySelectorAll('[data-url]').forEach((btn) => {
             setStatus($('api-badge'), 'falhou', 'err');
             output.textContent = `GET ${url} → erro: ${err.message}`;
         }
+    });
+});
+
+async function callCrud(payload) {
+    const output = $('api-output');
+    output.textContent = `POST /api/crud …\nPayload enviado:\n${JSON.stringify(payload, null, 2)}`;
+    try {
+        const started = performance.now();
+        const res = await requestDinamicCRUD(payload);
+        const elapsed = Math.round(performance.now() - started);
+
+        setStatus($('api-badge'), `${res.status} · ${elapsed} ms`, res.ok ? 'ok' : 'err');
+        output.textContent = `POST /api/crud → ${res.status} ${res.statusText}\nPayload: ${JSON.stringify(payload)}\n\nResposta:\n${JSON.stringify(res.body, null, 2)}`;
+    } catch (err) {
+        setStatus($('api-badge'), 'falhou', 'err');
+        output.textContent = `POST /api/crud → erro: ${err.message}`;
+    }
+}
+
+$('btn-crud-insert').addEventListener('click', () => {
+    const randomNum = Math.floor(Math.random() * 900) + 100;
+    callCrud({
+        action: 'INSERT',
+        table: 'products', // Usa o ALIAS, nunca o nome real tbl_products!
+        data: {
+            name: `Produto Teste #${randomNum}`,
+            price: Number((Math.random() * 200 + 10).toFixed(2)),
+            stock: Math.floor(Math.random() * 50) + 1,
+        },
+    });
+});
+
+$('btn-crud-select').addEventListener('click', () => {
+    callCrud({
+        action: 'SELECT',
+        table: 'products', // Usa o ALIAS!
+    });
+});
+
+$('btn-crud-block').addEventListener('click', () => {
+    callCrud({
+        action: 'SELECT',
+        table: 'tbl_products', // Deve bloquear! Tentando usar nome real em vez do alias
     });
 });
 
